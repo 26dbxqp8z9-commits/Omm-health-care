@@ -1,1 +1,658 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMM HEALTH CARE</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* Custom Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes bounceIn { 
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0) translateX(-50%);} 
+            40% {transform: translateY(-10px) translateX(-50%);} 
+            60% {transform: translateY(-5px) translateX(-50%);} 
+        }
+
+        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        .animate-slide-up { animation: slideUp 0.5s ease-out forwards; }
+        .animate-slide-in-right { animation: slideInRight 0.3s ease-out forwards; }
+        .animate-zoom-in { animation: zoomIn 0.2s ease-out forwards; }
+        .animate-toast-bounce { animation: bounceIn 1s ease; }
+        
+        /* Hide scrollbar for nav */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50 font-sans text-gray-800">
+
+    <!-- Navbar -->
+    <nav class="bg-[#278C87] text-white shadow-md sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('home')">
+                <!-- Custom SVG Logo -->
+                <svg viewBox="0 0 100 100" class="w-11 h-11 shadow-sm rounded-xl hover:scale-105 transition-transform" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="100" height="100" rx="16" fill="#FDF8F0" />
+                    <g fill="#278C87">
+                        <rect x="33" y="10" width="34" height="80" rx="6" />
+                        <rect x="10" y="33" width="80" height="34" rx="6" />
+                    </g>
+                    <path d="M 37 84 C 18 58 30 30 62 25 C 45 42 45 62 37 84 Z" fill="#FDF8F0" />
+                    <path d="M 44 68 C 55 52 66 48 76 48 C 65 60 55 65 44 68 Z" fill="#FDF8F0" />
+                </svg>
+                <div class="font-bold text-xl leading-tight tracking-wide">OMM HEALTH CARE</div>
+            </div>
+
+            <!-- Desktop Nav -->
+            <div class="hidden md:flex gap-6 items-center font-medium">
+                <button onclick="switchTab('pharmacy')" id="nav-desktop-pharmacy" class="hover:text-teal-200 transition pb-1">Pharmacy</button>
+                <button onclick="switchTab('lab')" id="nav-desktop-lab" class="hover:text-teal-200 transition pb-1">Lab Tests</button>
+                <button onclick="switchTab('doctors')" id="nav-desktop-doctors" class="hover:text-teal-200 transition pb-1">Doctors</button>
+            </div>
+
+            <!-- Cart Icon -->
+            <button onclick="toggleCart(true)" class="relative p-2 hover:bg-teal-600 rounded-full transition">
+                <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                <span id="cart-badge" class="hidden absolute top-0 right-0 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#278C87]">0</span>
+            </button>
+        </div>
+        
+        <!-- Mobile Nav -->
+        <div class="md:hidden flex overflow-x-auto px-4 py-2 bg-[#1c6965] gap-4 text-sm whitespace-nowrap no-scrollbar">
+            <button onclick="switchTab('home')" id="nav-mobile-home" class="px-3 py-1 rounded-full text-teal-100 transition">Home</button>
+            <button onclick="switchTab('pharmacy')" id="nav-mobile-pharmacy" class="px-3 py-1 rounded-full text-teal-100 transition">Pharmacy</button>
+            <button onclick="switchTab('lab')" id="nav-mobile-lab" class="px-3 py-1 rounded-full text-teal-100 transition">Lab Tests</button>
+            <button onclick="switchTab('doctors')" id="nav-mobile-doctors" class="px-3 py-1 rounded-full text-teal-100 transition">Doctors</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        
+        <!-- ================= HOME VIEW ================= -->
+        <div id="view-home" class="space-y-12 animate-fade-in block">
+            <!-- Hero -->
+            <div class="bg-[#eef8f7] rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 shadow-sm border border-teal-100">
+                <div class="flex-1 space-y-6">
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-[#1c6965] leading-tight">
+                        Comprehensive Care <br/> Delivered to You.
+                    </h1>
+                    <p class="text-lg text-teal-800">
+                        Order medicines with 15% discount, book doctor appointments, or request free home sample collection within 5km of Budamara Chowk.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="switchTab('pharmacy')" class="bg-[#278C87] hover:bg-[#1c6965] text-white px-6 py-3 rounded-full font-semibold shadow-md transition flex items-center gap-2">
+                            <i data-lucide="shopping-cart" class="w-5 h-5"></i> Order Medicines
+                        </button>
+                        <button onclick="switchTab('doctors')" class="bg-white text-[#278C87] border-2 border-[#278C87] hover:bg-teal-50 px-6 py-3 rounded-full font-semibold transition flex items-center gap-2">
+                            <i data-lucide="stethoscope" class="w-5 h-5"></i> Book Appointment
+                        </button>
+                    </div>
+                </div>
+                <div class="flex-1 flex justify-center">
+                    <div class="relative flex items-center justify-center">
+                        <!-- Large Custom Logo in Hero -->
+                        <svg viewBox="0 0 100 100" class="w-48 h-48 md:w-64 md:h-64 drop-shadow-2xl hover:-translate-y-2 transition-transform duration-500" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="100" height="100" rx="16" fill="#FDF8F0" />
+                            <g fill="#278C87"><rect x="33" y="10" width="34" height="80" rx="6" /><rect x="10" y="33" width="80" height="34" rx="6" /></g>
+                            <path d="M 37 84 C 18 58 30 30 62 25 C 45 42 45 62 37 84 Z" fill="#FDF8F0" />
+                            <path d="M 44 68 C 55 52 66 48 76 48 C 65 60 55 65 44 68 Z" fill="#FDF8F0" />
+                        </svg>
+                        <div class="absolute -bottom-4 -right-4 bg-white p-4 rounded-2xl shadow-xl border border-gray-100">
+                            <p class="text-teal-800 font-bold text-sm">15% OFF</p>
+                            <p class="text-xs text-gray-500">Orders above ₹999</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Services Grid -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <div onclick="switchTab('pharmacy')" class="cursor-pointer group bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition hover:border-[#278C87]">
+                    <div class="w-12 h-12 bg-blue-50 text-[#278C87] rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                        <i data-lucide="pill" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-gray-800">Pharmacy</h3>
+                    <p class="text-gray-600 text-sm">Order prescribed medicines online. Home delivery available for orders above ₹999.</p>
+                </div>
+                
+                <div onclick="switchTab('lab')" class="cursor-pointer group bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition hover:border-[#278C87]">
+                    <div class="w-12 h-12 bg-purple-50 text-[#278C87] rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                        <i data-lucide="flask-conical" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-gray-800">Lab Tests</h3>
+                    <p class="text-gray-600 text-sm">Free home sample collection for Blood & Urine tests within a 5km radius.</p>
+                </div>
+
+                <div onclick="switchTab('doctors')" class="cursor-pointer group bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition hover:border-[#278C87]">
+                    <div class="w-12 h-12 bg-green-50 text-[#278C87] rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                        <i data-lucide="stethoscope" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-gray-800">Clinic Appointments</h3>
+                    <p class="text-gray-600 text-sm">Consult with top specialists and general physicians at our clinic.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PHARMACY VIEW ================= -->
+        <div id="view-pharmacy" class="hidden animate-slide-up">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-800">Medicines & Healthcare</h2>
+                    <p class="text-gray-600 mt-2">Get 15% OFF on home delivery orders above ₹999/-</p>
+                </div>
+            </div>
+            <div id="pharmacy-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Medicines injected here via JS -->
+            </div>
+        </div>
+
+        <!-- ================= LAB TESTS VIEW ================= -->
+        <div id="view-lab" class="hidden animate-slide-up">
+            <div class="max-w-2xl mx-auto">
+                <div class="bg-teal-50 rounded-2xl p-6 mb-8 border border-teal-100 flex gap-4 items-start">
+                    <i data-lucide="info" class="w-6 h-6 text-[#278C87] flex-shrink-0 mt-1"></i>
+                    <div>
+                        <h3 class="font-bold text-teal-900">Free Home Sample Collection</h3>
+                        <p class="text-teal-800 text-sm mt-1">
+                            We offer completely free home sample collection for Blood and Urine tests within a <span class="font-bold">5km radius</span> of Budamara Chowk.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Lab Form -->
+                <form id="lab-form" onsubmit="handleLabSubmit(event)" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+                    <h2 class="text-2xl font-bold text-gray-800 border-b pb-4">Book Sample Collection</h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Patient Name</label>
+                            <input required type="text" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#278C87] outline-none" placeholder="Enter full name" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                            <input required type="tel" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#278C87] outline-none" placeholder="10-digit mobile number" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Test Type</label>
+                            <select class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#278C87] outline-none bg-white">
+                                <option value="blood">Blood Test</option>
+                                <option value="urine">Urine Test</option>
+                                <option value="both">Blood & Urine Tests</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Distance from Budamara Chowk (km)</label>
+                            <div class="flex items-center gap-4">
+                                <input type="range" id="lab-distance" min="1" max="20" value="2" oninput="updateLabDistance()" class="w-full accent-[#278C87]" />
+                                <span id="lab-distance-text" class="font-bold text-[#278C87] w-12 text-right">2 km</span>
+                            </div>
+                            <p id="lab-error-msg" class="hidden text-red-500 text-sm mt-2 flex items-center gap-1"><i data-lucide="x" class="w-4 h-4"></i> Home collection is only available within 5km.</p>
+                            <p id="lab-success-msg" class="text-green-600 text-sm mt-2 flex items-center gap-1"><i data-lucide="check-circle-2" class="w-4 h-4"></i> Eligible for Free Home Collection!</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Full Address</label>
+                            <textarea id="lab-address" required class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#278C87] outline-none disabled:bg-gray-100 disabled:text-gray-400" placeholder="Enter complete home address" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <button id="lab-submit-btn" type="submit" class="w-full bg-[#278C87] text-white font-bold py-4 rounded-xl hover:bg-[#1c6965] transition disabled:opacity-50 disabled:cursor-not-allowed">
+                        Confirm Booking
+                    </button>
+                </form>
+
+                <!-- Lab Success State -->
+                <div id="lab-success-state" class="hidden max-w-md mx-auto bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center animate-zoom-in">
+                    <i data-lucide="check-circle-2" class="w-16 h-16 text-green-500 mx-auto mb-4"></i>
+                    <h2 class="text-2xl font-bold mb-2">Request Confirmed!</h2>
+                    <p class="text-gray-600">Our lab technician will contact you shortly to schedule the pickup.</p>
+                    <button onclick="resetLabForm()" class="mt-6 text-[#278C87] font-medium hover:underline">Book another test</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= DOCTORS VIEW ================= -->
+        <div id="view-doctors" class="hidden animate-slide-up">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">Clinic Appointments</h2>
+            <p class="text-gray-600 mb-8">Book a consultation with our experienced specialists.</p>
+            <div id="doctors-grid" class="grid md:grid-cols-2 gap-6">
+                <!-- Doctors injected here via JS -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-10 text-center mt-12">
+        <div class="max-w-6xl mx-auto px-4">
+            <!-- Custom Logo in Footer -->
+            <svg viewBox="0 0 100 100" class="w-14 h-14 mx-auto mb-4 opacity-90 rounded-2xl shadow-lg" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="100" rx="16" fill="#FDF8F0" />
+                <g fill="#278C87"><rect x="33" y="10" width="34" height="80" rx="6" /><rect x="10" y="33" width="80" height="34" rx="6" /></g>
+                <path d="M 37 84 C 18 58 30 30 62 25 C 45 42 45 62 37 84 Z" fill="#FDF8F0" />
+                <path d="M 44 68 C 55 52 66 48 76 48 C 65 60 55 65 44 68 Z" fill="#FDF8F0" />
+            </svg>
+            <h3 class="text-white text-lg font-semibold mb-2 tracking-wide">OMM HEALTH CARE</h3>
+            <p>Your trusted clinic & medicine store.</p>
+            <p class="mt-2 text-sm flex items-center justify-center gap-1"><i data-lucide="map-pin" class="w-4 h-4"></i> Budamara Chowk, Odisha</p>
+            <p class="mt-6 text-xs text-gray-600">© 2026 Omm Health Care. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ================= MODALS & OVERLAYS ================= -->
+
+    <!-- Doctor Booking Modal -->
+    <div id="doctor-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-md animate-zoom-in">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold">Book Appointment</h3>
+                <button onclick="closeDoctorModal()" class="text-gray-400 hover:text-gray-800"><i data-lucide="x"></i></button>
+            </div>
+            <div class="bg-teal-50 p-4 rounded-xl mb-6">
+                <p id="doc-modal-name" class="font-bold text-teal-900"></p>
+                <p id="doc-modal-spec" class="text-sm text-teal-700"></p>
+            </div>
+            <form onsubmit="handleDoctorSubmit(event)" class="space-y-4">
+                <div><label class="block text-sm font-medium text-gray-700 mb-1">Your Name</label><input required type="text" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#278C87] outline-none" /></div>
+                <div><label class="block text-sm font-medium text-gray-700 mb-1">Phone</label><input required type="tel" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#278C87] outline-none" /></div>
+                <div><label class="block text-sm font-medium text-gray-700 mb-1">Preferred Date</label><input required type="date" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#278C87] outline-none" /></div>
+                <button type="submit" class="w-full bg-[#278C87] text-white font-bold py-3 rounded-xl hover:bg-[#1c6965] transition mt-2">Confirm Appointment</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-end">
+        <!-- Main Cart Sidebar -->
+        <div id="cart-sidebar" class="bg-white w-full max-w-md h-full shadow-2xl flex flex-col animate-slide-in-right hidden">
+            <div class="px-6 py-4 border-b flex justify-between items-center bg-gray-50">
+                <h2 class="text-xl font-bold flex items-center gap-2"><i data-lucide="shopping-cart" class="w-5 h-5 text-[#278C87]"></i> Your Cart</h2>
+                <button onclick="toggleCart(false)" class="p-2 hover:bg-gray-200 rounded-full transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            
+            <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-4">
+                <!-- Cart items injected here -->
+            </div>
+
+            <!-- Checkout Footer -->
+            <div id="cart-footer" class="bg-white border-t p-6 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)]">
+                <!-- Condition Warning injected dynamically -->
+                <div id="cart-warning"></div>
+
+                <div class="mb-4 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                    <label class="flex justify-between text-sm font-medium text-gray-700 mb-2">
+                        <span>Distance from Budamara Chowk</span>
+                        <span id="cart-distance-text" class="text-[#278C87] font-bold">3 km</span>
+                    </label>
+                    <input type="range" id="cart-distance" min="1" max="35" value="3" oninput="renderCartFooter()" class="w-full accent-[#278C87]" />
+                    <div class="flex justify-between text-[10px] text-gray-400 mt-1 font-medium">
+                        <span>0-5km: Free</span><span>5-15km: ₹49</span><span>15-30km: ₹69</span>
+                    </div>
+                </div>
+
+                <!-- Totals -->
+                <div id="cart-totals" class="space-y-2 text-sm text-gray-600 mb-4"></div>
+
+                <button id="checkout-btn" onclick="handleCheckout()" class="w-full bg-[#278C87] text-white font-bold py-4 rounded-xl hover:bg-[#1c6965] transition disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"></button>
+            </div>
+        </div>
+
+        <!-- Success Checkout View -->
+        <div id="cart-success" class="bg-white w-full max-w-md h-full shadow-2xl flex flex-col animate-slide-in-right hidden">
+             <div class="flex-grow flex flex-col items-center justify-center p-8 text-center space-y-4">
+                 <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                     <i data-lucide="check-circle-2" class="w-12 h-12 text-green-500"></i>
+                 </div>
+                 <h2 class="text-3xl font-bold text-gray-800">Order Placed!</h2>
+                 <p class="text-gray-600">Your medicines will be delivered shortly to your address.</p>
+                 <button onclick="closeSuccessCart()" class="mt-8 bg-gray-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-gray-800 transition">Back to Home</button>
+             </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-full shadow-xl z-50 flex items-center gap-2 animate-toast-bounce">
+        <i data-lucide="check-circle-2" class="w-5 h-5 text-green-400"></i>
+        <span id="toast-msg" class="font-medium"></span>
+    </div>
+
+    <!-- ================= JAVASCRIPT ================= -->
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Data
+        const MEDICINES = [
+            { id: 1, name: 'Paracetamol 500mg', desc: 'Fever & Pain relief', price: 50, image: '💊' },
+            { id: 2, name: 'Vitamin C + Zinc', desc: 'Immunity booster', price: 150, image: '🍋' },
+            { id: 3, name: 'Digital BP Monitor', desc: 'Accurate blood pressure', price: 1250, image: '🩺' },
+            { id: 4, name: 'Cough Syrup 100ml', desc: 'Dry & Wet cough relief', price: 120, image: '🍯' },
+            { id: 5, name: 'Diabetic Care Protein', desc: 'Sugar-free nutrition', price: 1150, image: '🥛' },
+            { id: 6, name: 'Pain Relief Spray', desc: 'Instant muscle relief', price: 199, image: '💨' },
+            { id: 7, name: 'Omega 3 Fish Oil', desc: 'Heart & Joint health', price: 899, image: '🐟' },
+            { id: 8, name: 'First Aid Kit', desc: 'Essential emergency supplies', price: 450, image: '🚑' },
+        ];
+
+        const DOCTORS = [
+            { id: 1, name: 'Dr. Arun Kumar', specialty: 'General Physician', available: 'Mon, Wed, Fri (10 AM - 2 PM)' },
+            { id: 2, name: 'Dr. Sunita Dash', specialty: 'Cardiologist', available: 'Tue, Thu (4 PM - 7 PM)' },
+            { id: 3, name: 'Dr. Rajesh Mohanty', specialty: 'Pediatrician', available: 'Mon - Sat (9 AM - 1 PM)' },
+            { id: 4, name: 'Dr. Priya Sharma', specialty: 'Orthopedic', available: 'Wed, Sat (5 PM - 8 PM)' },
+        ];
+
+        // State
+        let cart = [];
+        const MIN_ORDER = 999;
+        let selectedDocId = null;
+
+        // Render Data into DOM
+        function initApp() {
+            // Render Medicines
+            const pharmGrid = document.getElementById('pharmacy-grid');
+            pharmGrid.innerHTML = MEDICINES.map(med => `
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition flex flex-col">
+                    <div class="text-5xl text-center py-6 bg-gray-50 rounded-xl mb-4">${med.image}</div>
+                    <h3 class="font-bold text-lg text-gray-800">${med.name}</h3>
+                    <p class="text-sm text-gray-500 mb-4 flex-grow">${med.desc}</p>
+                    <div class="flex items-center justify-between mt-auto">
+                        <span class="font-extrabold text-teal-700 text-lg">₹${med.price}</span>
+                        <button onclick="addToCart(${med.id})" class="bg-teal-50 hover:bg-[#278C87] hover:text-white text-teal-700 p-2 rounded-lg transition font-medium text-sm flex items-center gap-1">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Add
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Render Doctors
+            const docsGrid = document.getElementById('doctors-grid');
+            docsGrid.innerHTML = DOCTORS.map(doc => `
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row gap-6 items-start sm:items-center hover:border-teal-100 transition">
+                    <div class="w-20 h-20 bg-teal-50 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="stethoscope" class="w-10 h-10 text-[#278C87]"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <h3 class="font-bold text-xl text-gray-800">${doc.name}</h3>
+                        <p class="text-[#278C87] font-medium mb-2">${doc.specialty}</p>
+                        <div class="flex items-center gap-2 text-sm text-gray-500 mb-4">
+                            <i data-lucide="clock" class="w-4 h-4"></i> <span>${doc.available}</span>
+                        </div>
+                    </div>
+                    <button onclick="openDoctorModal(${doc.id})" class="w-full sm:w-auto bg-gray-900 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-[#278C87] transition whitespace-nowrap">
+                        Book Now
+                    </button>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+            updateCartBadge();
+        }
+
+        // Navigation
+        function switchTab(tabId) {
+            ['home', 'pharmacy', 'lab', 'doctors'].forEach(tab => {
+                document.getElementById(`view-${tab}`).classList.add('hidden');
+                document.getElementById(`view-${tab}`).classList.remove('block');
+                
+                // Desktop Nav Styling
+                const dtBtn = document.getElementById(`nav-desktop-${tab}`);
+                if(tab === tabId) { dtBtn.classList.add('border-b-2', 'border-white'); }
+                else { dtBtn.classList.remove('border-b-2', 'border-white'); }
+
+                // Mobile Nav Styling
+                const mbBtn = document.getElementById(`nav-mobile-${tab}`);
+                if(tab === tabId) { mbBtn.classList.add('bg-white', 'text-teal-800'); mbBtn.classList.remove('text-teal-100'); }
+                else { mbBtn.classList.remove('bg-white', 'text-teal-800'); mbBtn.classList.add('text-teal-100'); }
+            });
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+            document.getElementById(`view-${tabId}`).classList.add('block');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Toast
+        let toastTimeout;
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('hidden');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        // Cart Logic
+        function addToCart(id) {
+            const product = MEDICINES.find(m => m.id === id);
+            const existing = cart.find(item => item.id === id);
+            if (existing) { existing.qty += 1; } 
+            else { cart.push({ ...product, qty: 1 }); }
+            showToast(`${product.name} added to cart`);
+            updateCartBadge();
+            if(!document.getElementById('cart-modal').classList.contains('hidden')) {
+                renderCartItems();
+            }
+        }
+
+        function updateQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if(item) {
+                item.qty += delta;
+                if(item.qty <= 0) { removeFromCart(id); return; }
+            }
+            renderCartItems();
+            updateCartBadge();
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            renderCartItems();
+            updateCartBadge();
+        }
+
+        function updateCartBadge() {
+            const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
+            const badge = document.getElementById('cart-badge');
+            if(totalItems > 0) {
+                badge.innerText = totalItems;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function toggleCart(show) {
+            const modal = document.getElementById('cart-modal');
+            const sidebar = document.getElementById('cart-sidebar');
+            const success = document.getElementById('cart-success');
+            
+            if(show) {
+                modal.classList.remove('hidden');
+                sidebar.classList.remove('hidden');
+                success.classList.add('hidden');
+                renderCartItems();
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cart-items');
+            const footer = document.getElementById('cart-footer');
+            
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-gray-400 space-y-4">
+                        <i data-lucide="shopping-cart" class="w-16 h-16 opacity-20"></i>
+                        <p>Your cart is empty.</p>
+                    </div>`;
+                footer.classList.add('hidden');
+            } else {
+                container.innerHTML = cart.map(item => `
+                    <div class="flex gap-4 items-center bg-white border border-gray-100 p-3 rounded-xl shadow-sm">
+                        <div class="text-3xl bg-gray-50 p-2 rounded-lg">${item.image}</div>
+                        <div class="flex-grow">
+                            <h4 class="font-bold text-sm text-gray-800">${item.name}</h4>
+                            <p class="text-[#278C87] font-bold text-sm">₹${item.price}</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="flex items-center bg-gray-100 rounded-lg overflow-hidden">
+                                <button onclick="updateQty(${item.id}, -1)" class="px-2 py-1 hover:bg-gray-200 text-gray-600"><i data-lucide="minus" class="w-3 h-3"></i></button>
+                                <span class="text-sm font-bold w-6 text-center">${item.qty}</span>
+                                <button onclick="updateQty(${item.id}, 1)" class="px-2 py-1 hover:bg-gray-200 text-gray-600"><i data-lucide="plus" class="w-3 h-3"></i></button>
+                            </div>
+                            <button onclick="removeFromCart(${item.id})" class="text-red-400 hover:text-red-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+                        </div>
+                    </div>
+                `).join('');
+                footer.classList.remove('hidden');
+                renderCartFooter();
+            }
+            lucide.createIcons();
+        }
+
+        function renderCartFooter() {
+            const distance = parseInt(document.getElementById('cart-distance').value);
+            document.getElementById('cart-distance-text').innerText = distance + ' km';
+
+            const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+            const canDeliver = subtotal >= MIN_ORDER;
+            const discount = canDeliver ? Math.round(subtotal * 0.15) : 0;
+            
+            let deliveryFee = 0;
+            let feeText = "Free";
+            let isDeliverable = true;
+
+            if (distance <= 5) { deliveryFee = 0; feeText = "Free"; } 
+            else if (distance <= 15) { deliveryFee = 49; feeText = "₹49"; } 
+            else if (distance <= 30) { deliveryFee = 69; feeText = "₹69"; } 
+            else { isDeliverable = false; feeText = "Not Serviceable"; }
+
+            const finalTotal = subtotal - discount + deliveryFee;
+
+            // Warning
+            const warningEl = document.getElementById('cart-warning');
+            if(!canDeliver) {
+                warningEl.innerHTML = `
+                    <div class="bg-red-50 text-red-700 text-xs p-3 rounded-lg flex gap-2 items-start mb-4">
+                        <i data-lucide="info" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
+                        <p>Minimum order of <b>₹999</b> is required for home delivery. Add ₹${MIN_ORDER - subtotal} more to proceed.</p>
+                    </div>`;
+            } else {
+                warningEl.innerHTML = '';
+            }
+
+            // Totals
+            let totalsHTML = `
+                <div class="flex justify-between"><span>Subtotal</span><span class="font-medium">₹${subtotal}</span></div>
+            `;
+            if(canDeliver) {
+                totalsHTML += `<div class="flex justify-between text-green-600 font-medium"><span>Discount (15%)</span><span>- ₹${discount}</span></div>`;
+            }
+            totalsHTML += `<div class="flex justify-between"><span>Delivery Fee</span><span class="${isDeliverable ? 'font-medium' : 'text-red-500 font-medium'}">${feeText}</span></div>`;
+            
+            totalsHTML += `
+                <div class="flex justify-between items-end border-t pt-4 mt-2">
+                    <span class="text-gray-500 font-medium">Total Amount</span>
+                    <span class="text-2xl font-black text-[#1c6965]">₹${isDeliverable ? finalTotal : '--'}</span>
+                </div>`;
+            
+            document.getElementById('cart-totals').innerHTML = totalsHTML;
+
+            // Button
+            const btn = document.getElementById('checkout-btn');
+            const disabled = !canDeliver || !isDeliverable;
+            btn.disabled = disabled;
+            
+            if(!canDeliver) { btn.innerHTML = 'Minimum Order ₹999'; }
+            else if(!isDeliverable) { btn.innerHTML = 'Out of Delivery Range'; }
+            else { btn.innerHTML = `Checkout (₹${finalTotal}) <i data-lucide="chevron-right" class="w-5 h-5"></i>`; }
+
+            lucide.createIcons();
+        }
+
+        function handleCheckout() {
+            const btn = document.getElementById('checkout-btn');
+            btn.innerText = 'Processing...';
+            btn.disabled = true;
+            setTimeout(() => {
+                cart = [];
+                updateCartBadge();
+                document.getElementById('cart-sidebar').classList.add('hidden');
+                document.getElementById('cart-success').classList.remove('hidden');
+            }, 1500);
+        }
+
+        function closeSuccessCart() {
+            toggleCart(false);
+        }
+
+        // Lab View Logic
+        function updateLabDistance() {
+            const val = document.getElementById('lab-distance').value;
+            document.getElementById('lab-distance-text').innerText = val + ' km';
+            
+            const isEligible = val <= 5;
+            document.getElementById('lab-error-msg').classList.toggle('hidden', isEligible);
+            document.getElementById('lab-success-msg').classList.toggle('hidden', !isEligible);
+            
+            const addressInput = document.getElementById('lab-address');
+            addressInput.disabled = !isEligible;
+            if(!isEligible) addressInput.value = '';
+
+            const btn = document.getElementById('lab-submit-btn');
+            btn.disabled = !isEligible;
+            btn.innerText = isEligible ? 'Confirm Booking' : 'Service Unavailable at Location';
+        }
+
+        function handleLabSubmit(e) {
+            e.preventDefault();
+            document.getElementById('lab-form').classList.add('hidden');
+            document.getElementById('lab-success-state').classList.remove('hidden');
+            showToast("Sample collection request received!");
+        }
+
+        function resetLabForm() {
+            document.getElementById('lab-form').reset();
+            updateLabDistance();
+            document.getElementById('lab-form').classList.remove('hidden');
+            document.getElementById('lab-success-state').classList.add('hidden');
+        }
+
+        // Doctor View Logic
+        function openDoctorModal(id) {
+            const doc = DOCTORS.find(d => d.id === id);
+            selectedDocId = id;
+            document.getElementById('doc-modal-name').innerText = doc.name;
+            document.getElementById('doc-modal-spec').innerText = doc.specialty;
+            document.getElementById('doctor-modal').classList.remove('hidden');
+        }
+
+        function closeDoctorModal() {
+            document.getElementById('doctor-modal').classList.add('hidden');
+            selectedDocId = null;
+        }
+
+        function handleDoctorSubmit(e) {
+            e.preventDefault();
+            const doc = DOCTORS.find(d => d.id === selectedDocId);
+            showToast(`Appointment booked with ${doc.name}!`);
+            closeDoctorModal();
+            e.target.reset();
+        }
+
+        // Start
+        initApp();
+        switchTab('home');
+
+    </script>
+</body>
+</html>
+
+```
 
