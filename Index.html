@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
@@ -84,7 +83,7 @@
             <div class="flex justify-between items-center h-20">
                 <!-- Logo & Brand -->
                 <a href="#" class="flex items-center gap-3 group">
-                    <img src="image.png" alt="OMM Health Care Logo" class="h-12 w-12 object-contain transition-transform duration-300 group-hover:scale-105" onerror="this.src='https://ui-avatars.com/api/?name=OMM&background=0d9488&color=fff&size=128'">
+                    <img src="image.png" alt="OMM Health Care Logo" class="h-12 w-12 object-contain transition-transform duration-300 group-hover:scale-105" onerror="this.src='https://ui-avatars.com/api/?name=OMM+Health+Care&background=0d9488&color=fff&size=48'">
                     <div class="flex flex-col">
                         <span class="text-xl font-bold text-brand-800 leading-tight">OMM HEALTH CARE</span>
                         <span class="text-xs text-brand-600 font-medium tracking-wide">CLINIC & PHARMACY</span>
@@ -225,8 +224,8 @@
                                 
                                 <!-- Prescription Upload -->
                                 <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Upload Prescription <span class="text-xs text-slate-400 font-normal">(Required for specific meds)</span></label>
-                                    <div class="file-upload-wrapper border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 hover:bg-brand-50 hover:border-brand-400 transition-colors text-center p-4">
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Upload Prescription <span class="text-xs text-slate-400 font-normal">(Required for specific medications)</span></label>
+                                    <div class="file-upload-wrapper border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 hover:bg-brand-50 hover:border-brand-400 transition-colors text-center py-8">
                                         <input type="file" id="prescription-upload" accept="image/*, application/pdf">
                                         <div class="flex flex-col items-center justify-center pointer-events-none">
                                             <i id="upload-icon" class="fas fa-cloud-upload-alt text-2xl text-brand-500 mb-2"></i>
@@ -243,14 +242,14 @@
                                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                             <i class="fas fa-map-marker-alt text-slate-400"></i>
                                         </div>
-                                        <input type="number" id="calc-distance" min="0" step="0.1" class="pl-10 w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none" placeholder="e.g. 4.5" required>
+                                        <input type="number" id="calc-distance" min="0" step="0.1" class="pl-10 w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-brand-500 outline-none" placeholder="Enter distance">
                                     </div>
                                 </div>
 
                                 <!-- Address -->
                                 <div>
                                     <label class="block text-sm font-semibold text-slate-700 mb-2">Delivery Details <span class="text-red-500">*</span></label>
-                                    <textarea id="pharmacy-address" rows="2" class="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none resize-none" placeholder="Full address and phone number..." required></textarea>
+                                    <textarea id="pharmacy-address" rows="2" class="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-brand-500 outline-none resize-none" placeholder="Enter delivery address" required></textarea>
                                 </div>
 
                                 <!-- Real-time Status / Error Message -->
@@ -278,7 +277,7 @@
                                     </div>
                                 </div>
                                 
-                                <button type="submit" id="btn-pharmacy-submit" disabled class="w-full bg-brand-600 text-white py-3.5 px-6 rounded-xl font-bold text-lg hover:bg-brand-700 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                                <button type="submit" id="btn-pharmacy-submit" disabled class="w-full bg-brand-600 text-white py-3.5 px-6 rounded-xl font-bold text-lg hover:bg-brand-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
                                     <span id="pharmacy-btn-text">Confirm Order</span>
                                     <i id="pharmacy-btn-spinner" class="fas fa-circle-notch fa-spin hidden"></i>
                                 </button>
@@ -291,7 +290,6 @@
 
         <!-- 2. Diagnostics Section -->
         <section id="diagnostics" class="scroll-mt-28">
-            <!-- Diagnostics layout same as previous professional version -->
             <div class="bg-brand-900 rounded-3xl shadow-2xl overflow-hidden relative">
                 <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
                 <div class="flex flex-col lg:flex-row relative z-10">
@@ -312,7 +310,7 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                 <div>
                                     <label class="block text-sm font-semibold text-slate-700 mb-2">Patient Name</label>
-                                    <input type="text" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" required>
+                                    <input type="text" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" placeholder="Full name" required>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-semibold text-slate-700 mb-2">Phone Number</label>
@@ -339,13 +337,13 @@
                                     <span>Distance from Clinic (km)</span>
                                     <span id="lab-dist-msg" class="text-xs font-bold text-brand-600"></span>
                                 </label>
-                                <input type="number" id="lab-dist-input" min="0" step="0.1" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" placeholder="Enter distance" required>
+                                <input type="number" id="lab-dist-input" min="0" step="0.1" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" placeholder="Distance in km" required>
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-slate-700 mb-2">Complete Address</label>
-                                <textarea rows="2" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none resize-none" required></textarea>
+                                <textarea rows="2" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none resize-none" placeholder="Full address" required></textarea>
                             </div>
-                            <button type="submit" id="btn-lab-submit" class="w-full bg-slate-800 text-white py-4 px-6 rounded-lg font-bold hover:bg-slate-900 transition-all flex items-center justify-center gap-2 mt-4">
+                            <button type="submit" id="btn-lab-submit" class="w-full bg-slate-800 text-white py-4 px-6 rounded-lg font-bold hover:bg-slate-900 transition-all flex items-center justify-center gap-2">
                                 <span id="lab-btn-text">Schedule Collection</span>
                                 <i id="lab-btn-spinner" class="fas fa-circle-notch fa-spin hidden"></i>
                             </button>
@@ -362,27 +360,30 @@
                 <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mt-2">Book an Appointment</h2>
                 <div class="w-20 h-1.5 bg-brand-500 mx-auto mt-4 rounded-full"></div>
             </div>
-            <!-- Clinic layout same as previous professional version -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="lg:col-span-1 space-y-4">
                     <h3 class="font-bold text-xl text-slate-800 mb-6 px-2">Our Specialists</h3>
                     <div class="doctor-card bg-white p-5 rounded-2xl shadow-sm border border-slate-200 cursor-pointer hover:shadow-md hover:border-brand-300 transition-all group" data-doctor="Dr. Sharma - General Medicine">
                         <div class="flex items-start gap-4">
-                            <div class="w-14 h-14 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center text-2xl group-hover:bg-brand-600 group-hover:text-white transition-colors shrink-0"><i class="fas fa-user-md"></i></div>
+                            <div class="w-14 h-14 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center text-2xl group-hover:bg-brand-600 group-hover:text-white transition-colors">
+                                <i class="fas fa-user-md"></i>
+                            </div>
                             <div>
                                 <h4 class="font-bold text-slate-800 text-lg">Dr. Sharma</h4>
                                 <p class="text-sm font-medium text-slate-500 mb-2">General Medicine</p>
-                                <div class="bg-slate-50 inline-block px-2 py-1 rounded text-xs text-slate-600 border border-slate-100"><i class="far fa-clock text-brand-500 mr-1"></i> Mon, Wed, Fri (5 PM - 8 PM)</div>
+                                <div class="bg-slate-50 inline-block px-2 py-1 rounded text-xs text-slate-600 border border-slate-100"><i class="far fa-clock text-brand-500 mr-1"></i> Mon, Wed, Fri</div>
                             </div>
                         </div>
                     </div>
                     <div class="doctor-card bg-white p-5 rounded-2xl shadow-sm border border-slate-200 cursor-pointer hover:shadow-md hover:border-brand-300 transition-all group" data-doctor="Dr. Patel - Pediatrics">
                         <div class="flex items-start gap-4">
-                            <div class="w-14 h-14 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center text-2xl group-hover:bg-brand-600 group-hover:text-white transition-colors shrink-0"><i class="fas fa-baby"></i></div>
+                            <div class="w-14 h-14 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center text-2xl group-hover:bg-brand-600 group-hover:text-white transition-colors">
+                                <i class="fas fa-user-md"></i>
+                            </div>
                             <div>
                                 <h4 class="font-bold text-slate-800 text-lg">Dr. Patel</h4>
                                 <p class="text-sm font-medium text-slate-500 mb-2">Pediatrics</p>
-                                <div class="bg-slate-50 inline-block px-2 py-1 rounded text-xs text-slate-600 border border-slate-100"><i class="far fa-clock text-brand-500 mr-1"></i> Tue, Thu, Sat (10 AM - 1 PM)</div>
+                                <div class="bg-slate-50 inline-block px-2 py-1 rounded text-xs text-slate-600 border border-slate-100"><i class="far fa-clock text-brand-500 mr-1"></i> Tue, Thu, Sat</div>
                             </div>
                         </div>
                     </div>
@@ -401,11 +402,11 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label class="block text-sm font-semibold text-slate-700 mb-2">Patient Name <span class="text-red-500">*</span></label>
-                                    <input type="text" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" required>
+                                    <input type="text" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" placeholder="Full name" required>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-semibold text-slate-700 mb-2">Phone Number <span class="text-red-500">*</span></label>
-                                    <input type="tel" pattern="[0-9]{10}" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" placeholder="10-digit mobile" required>
+                                    <input type="tel" pattern="[0-9]{10}" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" placeholder="10-digit number" required>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-semibold text-slate-700 mb-2">Preferred Date <span class="text-red-500">*</span></label>
@@ -413,10 +414,10 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-semibold text-slate-700 mb-2">Brief Issue / Symptoms</label>
-                                    <input type="text" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" placeholder="Optional">
+                                    <input type="text" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" placeholder="What brings you in?">
                                 </div>
                             </div>
-                            <button type="submit" id="btn-appt-submit" class="w-full bg-brand-600 text-white py-4 px-6 rounded-xl font-bold text-lg hover:bg-brand-700 transition-all shadow-md hover:shadow-lg mt-4 flex items-center justify-center gap-2">
+                            <button type="submit" id="btn-appt-submit" class="w-full bg-brand-600 text-white py-4 px-6 rounded-xl font-bold text-lg hover:bg-brand-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
                                 <span id="appt-btn-text">Confirm Appointment</span>
                                 <i id="appt-btn-spinner" class="fas fa-circle-notch fa-spin hidden"></i>
                             </button>
@@ -430,15 +431,14 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-slate-300 pt-16 pb-8 border-t-[6px] border-brand-500">
-        <!-- Footer content same as before -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-12">
                 <div class="md:col-span-5">
                     <div class="flex items-center gap-3 mb-6">
-                        <div class="bg-white p-1.5 rounded-lg inline-flex"><img src="image.png" alt="Logo" class="h-10 w-10 object-contain"></div>
+                        <div class="bg-white p-1.5 rounded-lg inline-flex"><img src="image.png" alt="Logo" class="h-10 w-10 object-contain" onerror="this.src='https://ui-avatars.com/api/?name=OMM&background=0d9488&color=fff&size=40'"></div>
                         <span class="text-2xl font-bold text-white tracking-tight">OMM HEALTH CARE</span>
                     </div>
-                    <p class="text-slate-400 leading-relaxed max-w-sm mb-6">Your trusted neighborhood healthcare destination. We are committed to providing premium clinical care, accurate diagnostics, and genuine medicines delivered to your door.</p>
+                    <p class="text-slate-400 leading-relaxed max-w-sm mb-6">Your trusted neighborhood healthcare destination. We are committed to providing premium clinical care, accurate diagnostics, and convenient medicine delivery services.</p>
                 </div>
                 <div class="md:col-span-3">
                     <h4 class="text-white text-lg font-bold mb-6">Quick Links</h4>
@@ -533,7 +533,7 @@
                         <h4 class="font-bold text-slate-800 text-lg leading-tight mb-1">${product.name}</h4>
                         <div class="text-xl font-extrabold text-slate-800 mb-4">₹${product.price}</div>
                     </div>
-                    <button onclick="addToCart(${product.id})" class="w-full bg-slate-100 hover:bg-brand-600 text-slate-700 hover:text-white py-2 rounded-lg font-bold transition-colors border border-slate-200 hover:border-brand-600 text-sm">
+                    <button onclick="addToCart(${product.id})" class="w-full bg-slate-100 hover:bg-brand-600 text-slate-700 hover:text-white py-2 rounded-lg font-bold transition-colors border border-slate-300">
                         Add to Cart
                     </button>
                 `;
@@ -726,7 +726,7 @@
                 });
             });
 
-            // --- Diagnostics & Clinic Logic (Same as before) ---
+            // --- Diagnostics & Clinic Logic ---
             const labDistInput = document.getElementById('lab-dist-input');
             const labDistMsg = document.getElementById('lab-dist-msg');
             labDistInput.addEventListener('input', (e) => {
@@ -781,6 +781,3 @@
     </script>
 </body>
 </html>
-
-
-```
