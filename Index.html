@@ -1,783 +1,772 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OMM Health Care | Clinic, Pharmacy & Diagnostics</title>
-    <!-- Favicon using your logo -->
-    <link rel="icon" type="image/png" href="image.png">
-    
-    <!-- Fonts & Icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#f0fdfa',
-                            100: '#ccfbf1',
-                            500: '#14b8a6', // Teal
-                            600: '#0d9488',
-                            700: '#0f766e',
-                            800: '#115e59',
-                            900: '#134e4a',
-                        }
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.3s ease-out',
-                        'slide-up': 'slideUp 0.4s ease-out',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideUp: {
-                            '0%': { opacity: '0', transform: 'translateY(10px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #0d9488; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #0f766e; }
-        
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-        }
-        
-        .toast-enter { transform: translateY(100%); opacity: 0; }
-        .toast-enter-active { transform: translateY(0); opacity: 1; transition: all 0.3s ease-out; }
-        .toast-exit { transform: translateY(0); opacity: 1; }
-        .toast-exit-active { transform: translateY(100%); opacity: 0; transition: all 0.3s ease-in; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OMM HEALTH CARE</title>
 
-        /* Custom file input styling */
-        .file-upload-wrapper { position: relative; overflow: hidden; cursor: pointer; }
-        .file-upload-wrapper input[type=file] { position: absolute; font-size: 100px; opacity: 0; right: 0; top: 0; cursor: pointer; }
-    </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: "#278C87",
+            brandDark: "#1c6965",
+            brandSoft: "#eef8f7"
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    .animate-in { animation: fadeIn 0.4s ease; }
+    .fade-in { animation: fadeIn 0.4s ease; }
+    .slide-in-from-bottom-4 { animation: slideInBottom 0.45s ease; }
+    .slide-in-from-right { animation: slideInRight 0.3s ease; }
+    .zoom-in-95 { animation: zoomIn 0.25s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideInBottom {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes toastPop {
+      0% { opacity: 0; transform: translate(-50%, 12px) scale(.96); }
+      15% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+      85% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, 12px) scale(.96); }
+    }
+
+    .toast-animate {
+      animation: toastPop 3s ease forwards;
+    }
+  </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased overflow-x-hidden">
+<body class="min-h-screen bg-gray-50 font-sans text-gray-800">
+  <div id="app"></div>
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed bottom-4 right-4 z-[60] flex flex-col gap-2 pointer-events-none"></div>
+  <script>
+    const MEDICINES = [
+      { id: 1, name: 'Paracetamol 500mg', desc: 'Fever & Pain relief', price: 50, image: '💊' },
+      { id: 2, name: 'Vitamin C + Zinc', desc: 'Immunity booster', price: 150, image: '🍋' },
+      { id: 3, name: 'Digital BP Monitor', desc: 'Accurate blood pressure', price: 1250, image: '🩺' },
+      { id: 4, name: 'Cough Syrup 100ml', desc: 'Dry & Wet cough relief', price: 120, image: '🍯' },
+      { id: 5, name: 'Diabetic Care Protein', desc: 'Sugar-free nutrition', price: 1150, image: '🥛' },
+      { id: 6, name: 'Pain Relief Spray', desc: 'Instant muscle relief', price: 199, image: '💨' },
+      { id: 7, name: 'Omega 3 Fish Oil', desc: 'Heart & Joint health', price: 899, image: '🐟' },
+      { id: 8, name: 'First Aid Kit', desc: 'Essential emergency supplies', price: 450, image: '🚑' },
+    ];
 
-    <!-- Navigation -->
-    <nav class="glass-nav fixed w-full top-0 z-50 border-b border-slate-200 shadow-sm transition-all duration-300" id="navbar">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <!-- Logo & Brand -->
-                <a href="#" class="flex items-center gap-3 group">
-                    <img src="image.png" alt="OMM Health Care Logo" class="h-12 w-12 object-contain transition-transform duration-300 group-hover:scale-105" onerror="this.src='https://ui-avatars.com/api/?name=OMM+Health+Care&background=0d9488&color=fff&size=48'">
-                    <div class="flex flex-col">
-                        <span class="text-xl font-bold text-brand-800 leading-tight">OMM HEALTH CARE</span>
-                        <span class="text-xs text-brand-600 font-medium tracking-wide">CLINIC & PHARMACY</span>
+    const DOCTORS = [
+      { id: 1, name: 'Dr. Arun Kumar', specialty: 'General Physician', available: 'Mon, Wed, Fri (10 AM - 2 PM)' },
+      { id: 2, name: 'Dr. Sunita Dash', specialty: 'Cardiologist', available: 'Tue, Thu (4 PM - 7 PM)' },
+      { id: 3, name: 'Dr. Rajesh Mohanty', specialty: 'Pediatrician', available: 'Mon - Sat (9 AM - 1 PM)' },
+      { id: 4, name: 'Dr. Priya Sharma', specialty: 'Orthopedic', available: 'Wed, Sat (5 PM - 8 PM)' },
+    ];
+
+    const state = {
+      activeTab: 'home',
+      cart: [],
+      isCartOpen: false,
+      toastMessage: null,
+      lab: {
+        testType: 'blood',
+        distance: 2,
+        submitted: false
+      },
+      doctors: {
+        selectedDoc: null
+      },
+      cartUI: {
+        distance: 3,
+        isProcessing: false,
+        orderPlaced: false
+      }
+    };
+
+    function OmmLogo(className = "w-10 h-10") {
+      return `
+        <svg viewBox="0 0 100 100" class="${className}" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" rx="16" fill="#FDF8F0" />
+          <g fill="#278C87">
+            <rect x="33" y="10" width="34" height="80" rx="6" />
+            <rect x="10" y="33" width="80" height="34" rx="6" />
+          </g>
+          <path d="M 37 84 C 18 58 30 30 62 25 C 45 42 45 62 37 84 Z" fill="#FDF8F0" />
+          <path d="M 44 68 C 55 52 66 48 76 48 C 65 60 55 65 44 68 Z" fill="#FDF8F0" />
+        </svg>
+      `;
+    }
+
+    function showToast(msg) {
+      state.toastMessage = msg;
+      render();
+      setTimeout(() => {
+        state.toastMessage = null;
+        render();
+      }, 3000);
+    }
+
+    function setActiveTab(tab) {
+      state.activeTab = tab;
+      render();
+    }
+
+    function addToCart(product) {
+      const existing = state.cart.find(item => item.id === product.id);
+      if (existing) {
+        state.cart = state.cart.map(item =>
+          item.id === product.id ? { ...item, qty: item.qty + 1 } : item
+        );
+      } else {
+        state.cart = [...state.cart, { ...product, qty: 1 }];
+      }
+      showToast(`${product.name} added to cart`);
+    }
+
+    function updateQty(id, delta) {
+      state.cart = state.cart.map(item => {
+        if (item.id === id) {
+          const newQty = item.qty + delta;
+          return newQty > 0 ? { ...item, qty: newQty } : item;
+        }
+        return item;
+      });
+      render();
+    }
+
+    function removeFromCart(id) {
+      state.cart = state.cart.filter(item => item.id !== id);
+      render();
+    }
+
+    function cartCount() {
+      return state.cart.reduce((acc, item) => acc + item.qty, 0);
+    }
+
+    function homeView() {
+      return `
+        <div class="space-y-12 animate-in fade-in duration-500">
+          <div class="bg-[#eef8f7] rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 shadow-sm border border-teal-100">
+            <div class="flex-1 space-y-6">
+              <h1 class="text-4xl md:text-5xl font-extrabold text-[#1c6965] leading-tight">
+                Comprehensive Care <br/> Delivered to You.
+              </h1>
+              <p class="text-lg text-teal-800">
+                Order medicines with 15% discount, book doctor appointments, or request free home sample collection within 5km of Budamara Chowk.
+              </p>
+              <div class="flex flex-wrap gap-4">
+                <button
+                  onclick="setActiveTab('pharmacy')"
+                  class="bg-[#278C87] hover:bg-[#1c6965] text-white px-6 py-3 rounded-full font-semibold shadow-md transition flex items-center gap-2"
+                >
+                  <i data-lucide="shopping-cart" class="w-5 h-5"></i> Order Medicines
+                </button>
+                <button
+                  onclick="setActiveTab('doctors')"
+                  class="bg-white text-[#278C87] border-2 border-[#278C87] hover:bg-teal-50 px-6 py-3 rounded-full font-semibold transition flex items-center gap-2"
+                >
+                  <i data-lucide="stethoscope" class="w-5 h-5"></i> Book Appointment
+                </button>
+              </div>
+            </div>
+            <div class="flex-1 flex justify-center">
+              <div class="relative flex items-center justify-center">
+                ${OmmLogo("w-48 h-48 md:w-64 md:h-64 drop-shadow-2xl hover:-translate-y-2 transition-transform duration-500")}
+                <div class="absolute -bottom-4 -right-4 bg-white p-4 rounded-2xl shadow-xl border border-gray-100">
+                  <p class="text-teal-800 font-bold text-sm">15% OFF</p>
+                  <p class="text-xs text-gray-500">Orders above ₹999</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-6">
+            <div onclick="setActiveTab('pharmacy')" class="cursor-pointer group bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition hover:border-[#278C87]">
+              <div class="w-12 h-12 bg-blue-50 text-[#278C87] rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                <i data-lucide="pill" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-xl font-bold mb-2 text-gray-800">Pharmacy</h3>
+              <p class="text-gray-600 text-sm">Order prescribed medicines online. Home delivery available for orders above ₹999.</p>
+            </div>
+
+            <div onclick="setActiveTab('lab')" class="cursor-pointer group bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition hover:border-[#278C87]">
+              <div class="w-12 h-12 bg-purple-50 text-[#278C87] rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                <i data-lucide="flask-conical" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-xl font-bold mb-2 text-gray-800">Lab Tests</h3>
+              <p class="text-gray-600 text-sm">Free home sample collection for Blood & Urine tests within a 5km radius.</p>
+            </div>
+
+            <div onclick="setActiveTab('doctors')" class="cursor-pointer group bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition hover:border-[#278C87]">
+              <div class="w-12 h-12 bg-green-50 text-[#278C87] rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                <i data-lucide="stethoscope" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-xl font-bold mb-2 text-gray-800">Clinic Appointments</h3>
+              <p class="text-gray-600 text-sm">Consult with top specialists and general physicians at our clinic.</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function pharmacyView() {
+      return `
+        <div class="animate-in slide-in-from-bottom-4 duration-500">
+          <div class="flex justify-between items-end mb-8">
+            <div>
+              <h2 class="text-3xl font-bold text-gray-800">Medicines & Healthcare</h2>
+              <p class="text-gray-600 mt-2">Get 15% OFF on home delivery orders above ₹999/-</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            ${MEDICINES.map(med => `
+              <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition flex flex-col">
+                <div class="text-5xl text-center py-6 bg-gray-50 rounded-xl mb-4">${med.image}</div>
+                <h3 class="font-bold text-lg text-gray-800">${med.name}</h3>
+                <p class="text-sm text-gray-500 mb-4 flex-grow">${med.desc}</p>
+                <div class="flex items-center justify-between mt-auto">
+                  <span class="font-extrabold text-teal-700 text-lg">₹${med.price}</span>
+                  <button
+                    onclick="addToCartById(${med.id})"
+                    class="bg-teal-50 hover:bg-[#278C87] hover:text-white text-teal-700 p-2 rounded-lg transition font-medium text-sm flex items-center gap-1"
+                  >
+                    <i data-lucide="plus" class="w-4 h-4"></i> Add
+                  </button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function labView() {
+      const { testType, distance, submitted } = state.lab;
+
+      if (submitted) {
+        return `
+          <div class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center animate-in zoom-in-95 duration-300">
+            <i data-lucide="check-circle-2" class="w-16 h-16 text-green-500 mx-auto mb-4"></i>
+            <h2 class="text-2xl font-bold mb-2">Request Confirmed!</h2>
+            <p class="text-gray-600">Our lab technician will contact you shortly to schedule the pickup.</p>
+            <button
+              onclick="resetLabForm()"
+              class="mt-6 text-[#278C87] font-medium hover:underline"
+            >
+              Book another test
+            </button>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="max-w-2xl mx-auto animate-in slide-in-from-bottom-4 duration-500">
+          <div class="bg-teal-50 rounded-2xl p-6 mb-8 border border-teal-100 flex gap-4 items-start">
+            <i data-lucide="info" class="w-6 h-6 text-[#278C87] flex-shrink-0 mt-1"></i>
+            <div>
+              <h3 class="font-bold text-teal-900">Free Home Sample Collection</h3>
+              <p class="text-teal-800 text-sm mt-1">
+                We offer completely free home sample collection for Blood and Urine tests within a <span class="font-bold">5km radius</span> of Budamara Chowk.
+              </p>
+            </div>
+          </div>
+
+          <form onsubmit="submitLabForm(event)" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+            <h2 class="text-2xl font-bold text-gray-800 border-b pb-4">Book Sample Collection</h2>
+
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Patient Name</label>
+                <input required type="text" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#278C87] outline-none" placeholder="Enter full name" />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                <input required type="tel" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#278C87] outline-none" placeholder="10-digit mobile number" />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Test Type</label>
+                <select
+                  onchange="setLabTestType(this.value)"
+                  class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#278C87] outline-none bg-white"
+                >
+                  <option value="blood" ${testType === 'blood' ? 'selected' : ''}>Blood Test</option>
+                  <option value="urine" ${testType === 'urine' ? 'selected' : ''}>Urine Test</option>
+                  <option value="both" ${testType === 'both' ? 'selected' : ''}>Blood & Urine Tests</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Distance from Budamara Chowk (km)</label>
+                <div class="flex items-center gap-4">
+                  <input
+                    type="range"
+                    min="1"
+                    max="20"
+                    value="${distance}"
+                    oninput="setLabDistance(this.value)"
+                    class="w-full accent-[#278C87]"
+                  />
+                  <span class="font-bold text-[#278C87] w-12 text-right">${distance} km</span>
+                </div>
+                ${distance > 5 ? `
+                  <p class="text-red-500 text-sm mt-2 flex items-center gap-1">
+                    <i data-lucide="x" class="w-4 h-4"></i> Home collection is only available within 5km. Please visit the clinic.
+                  </p>
+                ` : `
+                  <p class="text-green-600 text-sm mt-2 flex items-center gap-1">
+                    <i data-lucide="check-circle-2" class="w-4 h-4"></i> Eligible for Free Home Collection!
+                  </p>
+                `}
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Full Address</label>
+                <textarea required ${distance > 5 ? 'disabled' : ''} class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#278C87] outline-none disabled:bg-gray-100 disabled:text-gray-400" placeholder="Enter complete home address" rows="3"></textarea>
+              </div>
+            </div>
+
+            <button
+              ${distance > 5 ? 'disabled' : ''}
+              type="submit"
+              class="w-full bg-[#278C87] text-white font-bold py-4 rounded-xl hover:bg-[#1c6965] transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              ${distance > 5 ? 'Service Unavailable at Location' : 'Confirm Booking'}
+            </button>
+          </form>
+        </div>
+      `;
+    }
+
+    function doctorsView() {
+      return `
+        <div class="animate-in slide-in-from-bottom-4 duration-500">
+          <h2 class="text-3xl font-bold text-gray-800 mb-2">Clinic Appointments</h2>
+          <p class="text-gray-600 mb-8">Book a consultation with our experienced specialists.</p>
+
+          <div class="grid md:grid-cols-2 gap-6">
+            ${DOCTORS.map(doc => `
+              <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row gap-6 items-start sm:items-center hover:border-teal-100 transition">
+                <div class="w-20 h-20 bg-teal-50 rounded-full flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="stethoscope" class="w-10 h-10 text-[#278C87]"></i>
+                </div>
+                <div class="flex-grow">
+                  <h3 class="font-bold text-xl text-gray-800">${doc.name}</h3>
+                  <p class="text-[#278C87] font-medium mb-2">${doc.specialty}</p>
+                  <div class="flex items-center gap-2 text-sm text-gray-500 mb-4">
+                    <i data-lucide="clock" class="w-4 h-4"></i>
+                    <span>${doc.available}</span>
+                  </div>
+                </div>
+                <button
+                  onclick="selectDoctor(${doc.id})"
+                  class="w-full sm:w-auto bg-gray-900 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-[#278C87] transition whitespace-nowrap"
+                >
+                  Book Now
+                </button>
+              </div>
+            `).join('')}
+          </div>
+
+          ${doctorModal()}
+        </div>
+      `;
+    }
+
+    function doctorModal() {
+      const selectedDoc = state.doctors.selectedDoc;
+      if (!selectedDoc) return '';
+
+      return `
+        <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div class="bg-white rounded-2xl p-6 w-full max-w-md animate-in zoom-in-95 duration-200">
+            <div class="flex justify-between items-center mb-6">
+              <h3 class="text-xl font-bold">Book Appointment</h3>
+              <button onclick="closeDoctorModal()" class="text-gray-400 hover:text-gray-800">
+                <i data-lucide="x"></i>
+              </button>
+            </div>
+
+            <div class="bg-teal-50 p-4 rounded-xl mb-6">
+              <p class="font-bold text-teal-900">${selectedDoc.name}</p>
+              <p class="text-sm text-teal-700">${selectedDoc.specialty}</p>
+            </div>
+
+            <form onsubmit="bookDoctor(event)" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+                <input required type="text" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#278C87] outline-none" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                <input required type="tel" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#278C87] outline-none" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Preferred Date</label>
+                <input required type="date" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#278C87] outline-none" />
+              </div>
+              <button type="submit" class="w-full bg-[#278C87] text-white font-bold py-3 rounded-xl hover:bg-[#1c6965] transition mt-2">
+                Confirm Appointment
+              </button>
+            </form>
+          </div>
+        </div>
+      `;
+    }
+
+    function cartModal() {
+      if (!state.isCartOpen) return '';
+
+      const distance = state.cartUI.distance;
+      const isProcessing = state.cartUI.isProcessing;
+      const orderPlaced = state.cartUI.orderPlaced;
+
+      const MIN_ORDER = 999;
+      const subtotal = state.cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+      const canDeliver = subtotal >= MIN_ORDER;
+      const discount = canDeliver ? Math.round(subtotal * 0.15) : 0;
+
+      let deliveryFeeText = "";
+      let deliveryFee = 0;
+      let isDeliverableDistance = true;
+
+      if (distance <= 5) {
+        deliveryFee = 0;
+        deliveryFeeText = "Free";
+      } else if (distance <= 15) {
+        deliveryFee = 49;
+        deliveryFeeText = "₹49";
+      } else if (distance <= 30) {
+        deliveryFee = 69;
+        deliveryFeeText = "₹69";
+      } else {
+        isDeliverableDistance = false;
+        deliveryFeeText = "Not Serviceable";
+      }
+
+      const finalTotal = subtotal - discount + deliveryFee;
+
+      if (orderPlaced) {
+        return `
+          <div class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-end">
+            <div class="bg-white w-full max-w-md h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
+              <div class="flex-grow flex flex-col items-center justify-center p-8 text-center space-y-4">
+                <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                  <i data-lucide="check-circle-2" class="w-12 h-12 text-green-500"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-800">Order Placed!</h2>
+                <p class="text-gray-600">Your medicines will be delivered shortly to your address.</p>
+                <button
+                  onclick="closeCart()"
+                  class="mt-8 bg-gray-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-gray-800 transition"
+                >
+                  Back to Home
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-end">
+          <div class="bg-white w-full max-w-md h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
+            <div class="px-6 py-4 border-b flex justify-between items-center bg-gray-50">
+              <h2 class="text-xl font-bold flex items-center gap-2">
+                <i data-lucide="shopping-cart" class="w-5 h-5 text-[#278C87]"></i> Your Cart
+              </h2>
+              <button onclick="closeCart()" class="p-2 hover:bg-gray-200 rounded-full transition">
+                <i data-lucide="x" class="w-5 h-5"></i>
+              </button>
+            </div>
+
+            <div class="flex-grow overflow-y-auto p-6 space-y-4">
+              ${state.cart.length === 0 ? `
+                <div class="h-full flex flex-col items-center justify-center text-gray-400 space-y-4">
+                  <i data-lucide="shopping-cart" class="w-16 h-16 opacity-20"></i>
+                  <p>Your cart is empty.</p>
+                </div>
+              ` : state.cart.map(item => `
+                <div class="flex gap-4 items-center bg-white border border-gray-100 p-3 rounded-xl shadow-sm">
+                  <div class="text-3xl bg-gray-50 p-2 rounded-lg">${item.image}</div>
+                  <div class="flex-grow">
+                    <h4 class="font-bold text-sm text-gray-800">${item.name}</h4>
+                    <p class="text-[#278C87] font-bold text-sm">₹${item.price}</p>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <div class="flex items-center bg-gray-100 rounded-lg overflow-hidden">
+                      <button onclick="updateQty(${item.id}, -1)" class="px-2 py-1 hover:bg-gray-200 text-gray-600">
+                        <i data-lucide="minus" class="w-3 h-3"></i>
+                      </button>
+                      <span class="text-sm font-bold w-6 text-center">${item.qty}</span>
+                      <button onclick="updateQty(${item.id}, 1)" class="px-2 py-1 hover:bg-gray-200 text-gray-600">
+                        <i data-lucide="plus" class="w-3 h-3"></i>
+                      </button>
                     </div>
-                </a>
-
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#pharmacy" class="text-slate-600 hover:text-brand-600 font-medium transition-colors">Pharmacy</a>
-                    <a href="#diagnostics" class="text-slate-600 hover:text-brand-600 font-medium transition-colors">Diagnostics</a>
-                    <a href="#clinic" class="text-slate-600 hover:text-brand-600 font-medium transition-colors">Clinic</a>
-                    <a href="#pharmacy" class="bg-brand-600 text-white px-6 py-2.5 rounded-full font-semibold hover:bg-brand-700 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">
-                        Order Medicines
-                    </a>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-brand-600 focus:outline-none p-2">
-                        <i class="fas fa-bars text-2xl" id="menu-icon"></i>
+                    <button onclick="removeFromCart(${item.id})" class="text-red-400 hover:text-red-600">
+                      <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
+                  </div>
                 </div>
+              `).join('')}
             </div>
-        </div>
 
-        <!-- Mobile Menu Dropdown -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 absolute w-full shadow-lg">
-            <div class="px-4 pt-2 pb-6 space-y-2">
-                <a href="#pharmacy" class="block px-3 py-3 text-base font-medium text-slate-700 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors">Pharmacy</a>
-                <a href="#diagnostics" class="block px-3 py-3 text-base font-medium text-slate-700 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors">Diagnostics</a>
-                <a href="#clinic" class="block px-3 py-3 text-base font-medium text-slate-700 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors">Clinic</a>
-            </div>
-        </div>
-    </nav>
+            ${state.cart.length > 0 ? `
+              <div class="bg-white border-t p-6 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)]">
+                ${!canDeliver ? `
+                  <div class="bg-red-50 text-red-700 text-xs p-3 rounded-lg flex gap-2 items-start mb-4">
+                    <i data-lucide="info" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
+                    <p>Minimum order of <b>₹999</b> is required for home delivery. Add ₹${MIN_ORDER - subtotal} more to proceed.</p>
+                  </div>
+                ` : ''}
 
-    <!-- Hero Section -->
-    <section class="pt-28 pb-16 md:pt-36 md:pb-24 bg-gradient-to-br from-brand-800 to-brand-900 text-white relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
-        <div class="absolute bottom-0 left-0 w-96 h-96 bg-brand-500 opacity-20 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2"></div>
-        
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="flex flex-col lg:flex-row items-center gap-12">
-                <div class="lg:w-1/2 text-center lg:text-left animate-slide-up">
-                    <span class="inline-block py-1 px-3 rounded-full bg-brand-700/50 border border-brand-500/30 text-brand-100 text-sm font-semibold mb-6 backdrop-blur-sm">
-                        <i class="fas fa-heartbeat mr-2"></i> Trusted Healthcare Partner
+                <div class="mb-4 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                  <label class="flex justify-between text-sm font-medium text-gray-700 mb-2">
+                    <span>Distance from Budamara Chowk</span>
+                    <span class="text-[#278C87] font-bold">${distance} km</span>
+                  </label>
+                  <input
+                    type="range" min="1" max="35"
+                    value="${distance}"
+                    oninput="setCartDistance(this.value)"
+                    class="w-full accent-[#278C87]"
+                  />
+                  <div class="flex justify-between text-[10px] text-gray-400 mt-1 font-medium">
+                    <span>0-5km: Free</span>
+                    <span>5-15km: ₹49</span>
+                    <span>15-30km: ₹69</span>
+                  </div>
+                </div>
+
+                <div class="space-y-2 text-sm text-gray-600 mb-4">
+                  <div class="flex justify-between">
+                    <span>Subtotal</span>
+                    <span class="font-medium">₹${subtotal}</span>
+                  </div>
+
+                  ${canDeliver ? `
+                    <div class="flex justify-between text-green-600 font-medium">
+                      <span>Discount (15%)</span>
+                      <span>- ₹${discount}</span>
+                    </div>
+                  ` : ''}
+
+                  <div class="flex justify-between">
+                    <span>Delivery Fee</span>
+                    <span class="${isDeliverableDistance ? 'font-medium' : 'text-red-500 font-medium'}">
+                      ${deliveryFeeText}
                     </span>
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight tracking-tight">
-                        Complete Care, <br>
-                        <span class="text-brand-100">Delivered Home.</span>
-                    </h1>
-                    <p class="text-lg text-brand-50 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                        Expert clinic consultations, accurate diagnostics, and fast medicine delivery from Budamara chowk straight to your door.
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                        <a href="#pharmacy" class="bg-white text-brand-800 px-8 py-4 rounded-full font-bold shadow-xl hover:bg-brand-50 transition-all transform hover:-translate-y-1 text-center flex items-center justify-center gap-2">
-                            <i class="fas fa-shopping-cart"></i> Shop Medicines
-                        </a>
-                        <a href="#clinic" class="border-2 border-brand-400 text-white px-8 py-4 rounded-full font-bold hover:bg-brand-700 hover:border-brand-700 transition-all text-center flex items-center justify-center gap-2">
-                            <i class="far fa-calendar-check"></i> Book Appointment
-                        </a>
-                    </div>
+                  </div>
                 </div>
-                
-                <div class="lg:w-1/2 w-full animate-fade-in" style="animation-delay: 0.2s;">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl hover:bg-white/20 transition-colors">
-                            <div class="w-12 h-12 bg-brand-500 rounded-xl flex items-center justify-center text-2xl mb-4 shadow-lg"><i class="fas fa-tags text-white"></i></div>
-                            <h3 class="text-xl font-bold mb-2">15% Flat Discount</h3>
-                            <p class="text-brand-100 text-sm">On all medicine home delivery orders above ₹999.</p>
-                        </div>
-                        <div class="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl hover:bg-white/20 transition-colors">
-                            <div class="w-12 h-12 bg-brand-500 rounded-xl flex items-center justify-center text-2xl mb-4 shadow-lg"><i class="fas fa-motorcycle text-white"></i></div>
-                            <h3 class="text-xl font-bold mb-2">Fast Delivery</h3>
-                            <p class="text-brand-100 text-sm">Free delivery within 5km of Budamara chowk.</p>
-                        </div>
-                        <div class="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl hover:bg-white/20 transition-colors sm:col-span-2 flex items-center gap-4">
-                            <div class="w-12 h-12 bg-brand-500 rounded-xl flex items-center justify-center text-2xl shadow-lg shrink-0"><i class="fas fa-vial text-white"></i></div>
-                            <div>
-                                <h3 class="text-xl font-bold mb-1">Free Sample Collection</h3>
-                                <p class="text-brand-100 text-sm">Blood & urine sample collection at home (Free within 5km).</p>
-                            </div>
-                        </div>
-                    </div>
+
+                <div class="flex justify-between items-end border-t pt-4 mb-6">
+                  <span class="text-gray-500 font-medium">Total Amount</span>
+                  <span class="text-2xl font-black text-[#1c6965]">
+                    ₹${isDeliverableDistance ? finalTotal : '--'}
+                  </span>
                 </div>
-            </div>
+
+                <button
+                  ${(!canDeliver || !isDeliverableDistance || isProcessing) ? 'disabled' : ''}
+                  onclick="handleCheckout()"
+                  class="w-full bg-[#278C87] text-white font-bold py-4 rounded-xl hover:bg-[#1c6965] transition disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+                >
+                  ${
+                    isProcessing
+                      ? 'Processing...'
+                      : !canDeliver
+                        ? 'Minimum Order ₹999'
+                        : !isDeliverableDistance
+                          ? 'Out of Delivery Range'
+                          : `Checkout (₹${finalTotal})`
+                  }
+                  ${canDeliver && isDeliverableDistance && !isProcessing ? '<i data-lucide="chevron-right" class="w-5 h-5"></i>' : ''}
+                </button>
+              </div>
+            ` : ''}
+          </div>
         </div>
-    </section>
+      `;
+    }
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
+    function currentView() {
+      if (state.activeTab === 'home') return homeView();
+      if (state.activeTab === 'pharmacy') return pharmacyView();
+      if (state.activeTab === 'lab') return labView();
+      if (state.activeTab === 'doctors') return doctorsView();
+      return homeView();
+    }
 
-        <!-- 1. Pharmacy Section with Cart -->
-        <section id="pharmacy" class="scroll-mt-28">
-            <div class="text-center mb-12">
-                <span class="text-brand-600 font-bold tracking-wider uppercase text-sm">Pharmacy</span>
-                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mt-2">Order Medicines Online</h2>
-                <div class="w-20 h-1.5 bg-brand-500 mx-auto mt-4 rounded-full"></div>
+    function render() {
+      document.getElementById('app').innerHTML = `
+        <div class="min-h-screen bg-gray-50 font-sans text-gray-800">
+          <nav class="bg-[#278C87] text-white shadow-md sticky top-0 z-40">
+            <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+              <div
+                class="flex items-center gap-3 cursor-pointer"
+                onclick="setActiveTab('home')"
+              >
+                ${OmmLogo("w-11 h-11 shadow-sm rounded-xl hover:scale-105 transition-transform")}
+                <div class="font-bold text-xl leading-tight tracking-wide">
+                  OMM HEALTH CARE
+                </div>
+              </div>
+
+              <div class="hidden md:flex gap-6 items-center font-medium">
+                <button onclick="setActiveTab('pharmacy')" class="hover:text-teal-200 transition ${state.activeTab === 'pharmacy' ? 'border-b-2 border-white' : ''}">Pharmacy</button>
+                <button onclick="setActiveTab('lab')" class="hover:text-teal-200 transition ${state.activeTab === 'lab' ? 'border-b-2 border-white' : ''}">Lab Tests</button>
+                <button onclick="setActiveTab('doctors')" class="hover:text-teal-200 transition ${state.activeTab === 'doctors' ? 'border-b-2 border-white' : ''}">Doctors</button>
+              </div>
+
+              <button
+                onclick="openCart()"
+                class="relative p-2 hover:bg-teal-600 rounded-full transition"
+              >
+                <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                ${state.cart.length > 0 ? `
+                  <span class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#278C87]">
+                    ${cartCount()}
+                  </span>
+                ` : ''}
+              </button>
             </div>
 
-            <div class="flex flex-col lg:flex-row gap-8">
-                
-                <!-- Left: Products Catalog -->
-                <div class="lg:w-7/12">
-                    <div class="flex justify-between items-end mb-6 border-b border-slate-200 pb-4">
-                        <h3 class="text-2xl font-bold text-slate-800"><i class="fas fa-pills text-brand-500 mr-2"></i> Popular Products</h3>
-                        <span class="text-sm font-medium text-slate-500">Minimum Order: ₹999</span>
-                    </div>
-                    
-                    <!-- Dynamic Product Grid will be inserted here by JS -->
-                    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <!-- Products rendered via JS -->
-                    </div>
-                </div>
-
-                <!-- Right: Cart & Checkout Form -->
-                <div class="lg:w-5/12">
-                    <div class="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden sticky top-28">
-                        
-                        <!-- Cart Header -->
-                        <div class="bg-slate-50 p-6 border-b border-slate-100 flex justify-between items-center">
-                            <h3 class="text-xl font-bold text-slate-800"><i class="fas fa-shopping-cart text-brand-600 mr-2"></i> Your Cart</h3>
-                            <span id="cart-count-badge" class="bg-brand-600 text-white text-xs font-bold px-2 py-1 rounded-full">0 Items</span>
-                        </div>
-
-                        <!-- Cart Items Area -->
-                        <div id="cart-items-container" class="p-6 max-h-60 overflow-y-auto space-y-4">
-                            <!-- Empty State -->
-                            <div id="empty-cart-msg" class="text-center text-slate-400 py-6">
-                                <i class="fas fa-cart-plus text-4xl mb-3 opacity-50"></i>
-                                <p class="text-sm">Your cart is empty. Add medicines from the list.</p>
-                            </div>
-                            <!-- Added items will appear here -->
-                        </div>
-
-                        <!-- Checkout Form -->
-                        <div class="p-6 bg-white border-t border-slate-100">
-                            <form id="pharmacy-form" class="space-y-5">
-                                
-                                <!-- Prescription Upload -->
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Upload Prescription <span class="text-xs text-slate-400 font-normal">(Required for specific medications)</span></label>
-                                    <div class="file-upload-wrapper border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 hover:bg-brand-50 hover:border-brand-400 transition-colors text-center py-8">
-                                        <input type="file" id="prescription-upload" accept="image/*, application/pdf">
-                                        <div class="flex flex-col items-center justify-center pointer-events-none">
-                                            <i id="upload-icon" class="fas fa-cloud-upload-alt text-2xl text-brand-500 mb-2"></i>
-                                            <span id="upload-text" class="text-sm font-medium text-slate-600">Click or drag prescription here</span>
-                                            <span class="text-xs text-slate-400 mt-1">Accepts JPG, PNG, PDF</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Distance Input -->
-                                <div class="relative">
-                                    <label for="calc-distance" class="block text-sm font-semibold text-slate-700 mb-2">Distance from Clinic (km) <span class="text-red-500">*</span></label>
-                                    <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <i class="fas fa-map-marker-alt text-slate-400"></i>
-                                        </div>
-                                        <input type="number" id="calc-distance" min="0" step="0.1" class="pl-10 w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-brand-500 outline-none" placeholder="Enter distance">
-                                    </div>
-                                </div>
-
-                                <!-- Address -->
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Delivery Details <span class="text-red-500">*</span></label>
-                                    <textarea id="pharmacy-address" rows="2" class="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-brand-500 outline-none resize-none" placeholder="Enter delivery address" required></textarea>
-                                </div>
-
-                                <!-- Real-time Status / Error Message -->
-                                <div id="calc-status" class="hidden rounded-xl p-3 text-sm font-medium border animate-fade-in"></div>
-
-                                <!-- Order Summary -->
-                                <div id="calc-summary" class="bg-slate-50 rounded-xl p-4 border border-slate-200">
-                                    <div class="space-y-2 text-sm">
-                                        <div class="flex justify-between text-slate-600">
-                                            <span>Subtotal</span>
-                                            <span class="font-semibold">₹<span id="sum-sub">0.00</span></span>
-                                        </div>
-                                        <div class="flex justify-between text-brand-600 bg-brand-50 p-1.5 rounded -mx-1 px-1">
-                                            <span><i class="fas fa-tag text-xs"></i> Discount (15%)</span>
-                                            <span class="font-bold">- ₹<span id="sum-disc">0.00</span></span>
-                                        </div>
-                                        <div class="flex justify-between text-slate-600">
-                                            <span>Delivery Fee</span>
-                                            <span class="font-semibold">₹<span id="sum-del">0.00</span></span>
-                                        </div>
-                                        <div class="pt-2 border-t border-slate-200 flex justify-between items-center">
-                                            <span class="font-bold text-slate-800">Total Payable</span>
-                                            <span class="text-xl font-extrabold text-brand-700">₹<span id="sum-total">0.00</span></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <button type="submit" id="btn-pharmacy-submit" disabled class="w-full bg-brand-600 text-white py-3.5 px-6 rounded-xl font-bold text-lg hover:bg-brand-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
-                                    <span id="pharmacy-btn-text">Confirm Order</span>
-                                    <i id="pharmacy-btn-spinner" class="fas fa-circle-notch fa-spin hidden"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+            <div class="md:hidden flex overflow-x-auto px-4 py-2 bg-[#1c6965] gap-4 text-sm whitespace-nowrap">
+              <button onclick="setActiveTab('home')" class="px-3 py-1 rounded-full ${state.activeTab === 'home' ? 'bg-white text-teal-800' : 'text-teal-100'}">Home</button>
+              <button onclick="setActiveTab('pharmacy')" class="px-3 py-1 rounded-full ${state.activeTab === 'pharmacy' ? 'bg-white text-teal-800' : 'text-teal-100'}">Pharmacy</button>
+              <button onclick="setActiveTab('lab')" class="px-3 py-1 rounded-full ${state.activeTab === 'lab' ? 'bg-white text-teal-800' : 'text-teal-100'}">Lab Tests</button>
+              <button onclick="setActiveTab('doctors')" class="px-3 py-1 rounded-full ${state.activeTab === 'doctors' ? 'bg-white text-teal-800' : 'text-teal-100'}">Doctors</button>
             </div>
-        </section>
+          </nav>
 
-        <!-- 2. Diagnostics Section -->
-        <section id="diagnostics" class="scroll-mt-28">
-            <div class="bg-brand-900 rounded-3xl shadow-2xl overflow-hidden relative">
-                <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
-                <div class="flex flex-col lg:flex-row relative z-10">
-                    <div class="lg:w-1/2 p-10 lg:p-16 flex flex-col justify-center text-white">
-                        <span class="text-brand-300 font-bold tracking-wider uppercase text-sm">Diagnostics</span>
-                        <h2 class="text-3xl md:text-4xl font-extrabold mt-2 mb-4">Home Sample Collection</h2>
-                        <p class="text-brand-100 text-lg mb-8 leading-relaxed">
-                            Safe, hygienic, and convenient blood and urine testing. Our expert phlebotomists will visit your home at your scheduled time.
-                        </p>
-                        <div class="bg-white/10 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
-                            <h4 class="font-bold text-lg mb-3 flex items-center gap-2"><i class="fas fa-gift text-yellow-400"></i> Special Offer</h4>
-                            <p class="text-brand-50">Collection is <strong class="text-white">100% FREE</strong> for addresses within a 5km radius of Budamara chowk.</p>
-                        </div>
-                    </div>
-                    <div class="lg:w-1/2 bg-white p-8 lg:p-12">
-                        <form id="lab-form" class="space-y-5">
-                            <h3 class="text-2xl font-bold text-slate-800 mb-6 border-b pb-4">Book a Test</h3>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Patient Name</label>
-                                    <input type="text" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" placeholder="Full name" required>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Phone Number</label>
-                                    <input type="tel" pattern="[0-9]{10}" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" placeholder="10-digit number" required>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Test Type</label>
-                                    <select class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" required>
-                                        <option value="">Select Test Type</option>
-                                        <option value="Blood Test">Blood Test (CBC, Sugar, etc.)</option>
-                                        <option value="Urine Test">Urine Analysis</option>
-                                        <option value="Both">Both Blood & Urine</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Preferred Date</label>
-                                    <input type="date" id="lab-date" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" required>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2 flex justify-between">
-                                    <span>Distance from Clinic (km)</span>
-                                    <span id="lab-dist-msg" class="text-xs font-bold text-brand-600"></span>
-                                </label>
-                                <input type="number" id="lab-dist-input" min="0" step="0.1" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" placeholder="Distance in km" required>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2">Complete Address</label>
-                                <textarea rows="2" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none resize-none" placeholder="Full address" required></textarea>
-                            </div>
-                            <button type="submit" id="btn-lab-submit" class="w-full bg-slate-800 text-white py-4 px-6 rounded-lg font-bold hover:bg-slate-900 transition-all flex items-center justify-center gap-2">
-                                <span id="lab-btn-text">Schedule Collection</span>
-                                <i id="lab-btn-spinner" class="fas fa-circle-notch fa-spin hidden"></i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
+          <main class="max-w-6xl mx-auto px-4 py-8">
+            ${currentView()}
+          </main>
 
-        <!-- 3. Clinic Section -->
-        <section id="clinic" class="scroll-mt-28">
-            <div class="text-center mb-12">
-                <span class="text-brand-600 font-bold tracking-wider uppercase text-sm">Clinic</span>
-                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mt-2">Book an Appointment</h2>
-                <div class="w-20 h-1.5 bg-brand-500 mx-auto mt-4 rounded-full"></div>
+          <footer class="bg-gray-900 text-gray-400 py-10 text-center mt-12">
+            <div class="max-w-6xl mx-auto px-4">
+              ${OmmLogo("w-14 h-14 mx-auto mb-4 opacity-90 rounded-2xl shadow-lg")}
+              <h3 class="text-white text-lg font-semibold mb-2 tracking-wide">OMM HEALTH CARE</h3>
+              <p>Your trusted clinic & medicine store.</p>
+              <p class="mt-2 text-sm flex items-center justify-center gap-1">
+                <i data-lucide="map-pin" class="w-4 h-4"></i> Budamara Chowk, Odisha
+              </p>
+              <p class="mt-6 text-xs text-gray-600">© 2026 Omm Health Care. All rights reserved.</p>
             </div>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="lg:col-span-1 space-y-4">
-                    <h3 class="font-bold text-xl text-slate-800 mb-6 px-2">Our Specialists</h3>
-                    <div class="doctor-card bg-white p-5 rounded-2xl shadow-sm border border-slate-200 cursor-pointer hover:shadow-md hover:border-brand-300 transition-all group" data-doctor="Dr. Sharma - General Medicine">
-                        <div class="flex items-start gap-4">
-                            <div class="w-14 h-14 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center text-2xl group-hover:bg-brand-600 group-hover:text-white transition-colors">
-                                <i class="fas fa-user-md"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-slate-800 text-lg">Dr. Sharma</h4>
-                                <p class="text-sm font-medium text-slate-500 mb-2">General Medicine</p>
-                                <div class="bg-slate-50 inline-block px-2 py-1 rounded text-xs text-slate-600 border border-slate-100"><i class="far fa-clock text-brand-500 mr-1"></i> Mon, Wed, Fri</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="doctor-card bg-white p-5 rounded-2xl shadow-sm border border-slate-200 cursor-pointer hover:shadow-md hover:border-brand-300 transition-all group" data-doctor="Dr. Patel - Pediatrics">
-                        <div class="flex items-start gap-4">
-                            <div class="w-14 h-14 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center text-2xl group-hover:bg-brand-600 group-hover:text-white transition-colors">
-                                <i class="fas fa-user-md"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-slate-800 text-lg">Dr. Patel</h4>
-                                <p class="text-sm font-medium text-slate-500 mb-2">Pediatrics</p>
-                                <div class="bg-slate-50 inline-block px-2 py-1 rounded text-xs text-slate-600 border border-slate-100"><i class="far fa-clock text-brand-500 mr-1"></i> Tue, Thu, Sat</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="lg:col-span-2">
-                    <div class="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 p-8 lg:p-10 h-full">
-                        <form id="appointment-form" class="space-y-6">
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2">Select Specialist <span class="text-red-500">*</span></label>
-                                <select id="doctor-select" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" required>
-                                    <option value="">-- Choose a Doctor --</option>
-                                    <option value="Dr. Sharma - General Medicine">Dr. Sharma - General Medicine</option>
-                                    <option value="Dr. Patel - Pediatrics">Dr. Patel - Pediatrics</option>
-                                </select>
-                            </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Patient Name <span class="text-red-500">*</span></label>
-                                    <input type="text" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" placeholder="Full name" required>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Phone Number <span class="text-red-500">*</span></label>
-                                    <input type="tel" pattern="[0-9]{10}" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" placeholder="10-digit number" required>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Preferred Date <span class="text-red-500">*</span></label>
-                                    <input type="date" id="appointment-date" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" required>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Brief Issue / Symptoms</label>
-                                    <input type="text" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" placeholder="What brings you in?">
-                                </div>
-                            </div>
-                            <button type="submit" id="btn-appt-submit" class="w-full bg-brand-600 text-white py-4 px-6 rounded-xl font-bold text-lg hover:bg-brand-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
-                                <span id="appt-btn-text">Confirm Appointment</span>
-                                <i id="appt-btn-spinner" class="fas fa-circle-notch fa-spin hidden"></i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
+          </footer>
 
-    </main>
+          ${cartModal()}
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-300 pt-16 pb-8 border-t-[6px] border-brand-500">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-12">
-                <div class="md:col-span-5">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="bg-white p-1.5 rounded-lg inline-flex"><img src="image.png" alt="Logo" class="h-10 w-10 object-contain" onerror="this.src='https://ui-avatars.com/api/?name=OMM&background=0d9488&color=fff&size=40'"></div>
-                        <span class="text-2xl font-bold text-white tracking-tight">OMM HEALTH CARE</span>
-                    </div>
-                    <p class="text-slate-400 leading-relaxed max-w-sm mb-6">Your trusted neighborhood healthcare destination. We are committed to providing premium clinical care, accurate diagnostics, and convenient medicine delivery services.</p>
-                </div>
-                <div class="md:col-span-3">
-                    <h4 class="text-white text-lg font-bold mb-6">Quick Links</h4>
-                    <ul class="space-y-3">
-                        <li><a href="#pharmacy" class="hover:text-brand-400 transition-colors">Order Medicines</a></li>
-                        <li><a href="#diagnostics" class="hover:text-brand-400 transition-colors">Book Lab Test</a></li>
-                        <li><a href="#clinic" class="hover:text-brand-400 transition-colors">Doctor Appointments</a></li>
-                    </ul>
-                </div>
-                <div class="md:col-span-4">
-                    <h4 class="text-white text-lg font-bold mb-6">Contact Us</h4>
-                    <ul class="space-y-4">
-                        <li class="flex items-start gap-3"><i class="fas fa-map-marker-alt mt-1.5 text-brand-500"></i> <span>Near Budamara chowk</span></li>
-                        <li class="flex items-center gap-3"><i class="fas fa-phone text-brand-500"></i> <span class="font-medium text-white">+91 98765 43210</span></li>
-                    </ul>
-                </div>
+          ${state.toastMessage ? `
+            <div class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-full shadow-xl z-50 flex items-center gap-2 toast-animate">
+              <i data-lucide="check-circle-2" class="w-5 h-5 text-green-400"></i>
+              <span class="font-medium">${state.toastMessage}</span>
             </div>
-            <div class="border-t border-slate-800 pt-8 text-center text-sm text-slate-500">
-                &copy; <span id="current-year"></span> OMM Health Care. All rights reserved.
-            </div>
+          ` : ''}
         </div>
-    </footer>
+      `;
 
-    <!-- Logic Engine & Cart Management -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            // --- Shared Setup ---
-            const today = new Date().toISOString().split("T")[0];
-            document.getElementById('lab-date').min = today;
-            document.getElementById('appointment-date').min = today;
-            document.getElementById('current-year').textContent = new Date().getFullYear();
+      if (window.lucide) lucide.createIcons();
+    }
 
-            // Mobile Menu
-            document.getElementById('mobile-menu-btn').addEventListener('click', function() {
-                const menu = document.getElementById('mobile-menu');
-                menu.classList.toggle('hidden');
-                const icon = document.getElementById('menu-icon');
-                icon.classList.toggle('fa-bars');
-                icon.classList.toggle('fa-times');
-            });
+    function addToCartById(id) {
+      const product = MEDICINES.find(m => m.id === id);
+      if (product) addToCart(product);
+    }
 
-            // Toast Notifications
-            function showToast(message, type = 'success') {
-                const container = document.getElementById('toast-container');
-                const toast = document.createElement('div');
-                const isSuccess = type === 'success';
-                const bgColor = isSuccess ? 'bg-green-600' : 'bg-red-500';
-                const icon = isSuccess ? 'fa-check-circle' : 'fa-exclamation-circle';
-                
-                toast.className = `flex items-center gap-3 px-4 py-3 text-white ${bgColor} rounded-xl shadow-lg pointer-events-auto toast-enter`;
-                toast.innerHTML = `<i class="fas ${icon} text-xl"></i><p class="text-sm font-medium pr-2">${message}</p>`;
-                container.appendChild(toast);
-                
-                requestAnimationFrame(() => {
-                    toast.classList.remove('toast-enter');
-                    toast.classList.add('toast-enter-active');
-                });
-                setTimeout(() => {
-                    toast.classList.remove('toast-enter-active');
-                    toast.classList.add('toast-exit-active');
-                    setTimeout(() => toast.remove(), 300);
-                }, 4000);
-            }
+    function openCart() {
+      state.isCartOpen = true;
+      render();
+    }
 
-            const simulateNetwork = (callback) => setTimeout(callback, 1200);
+    function closeCart() {
+      state.isCartOpen = false;
+      state.cartUI.orderPlaced = false;
+      state.cartUI.isProcessing = false;
+      render();
+    }
 
-            // ==============================================
-            // --- NEW CART & PHARMACY ENGINE ---
-            // ==============================================
-            
-            // 1. Mock Database of Medicines
-            const products = [
-                { id: 1, name: "Complete Health Checkup Kit (At Home)", price: 1499, category: "Kits" },
-                { id: 2, name: "Diabetic Care Monthly Pack", price: 850, category: "Chronic Care" },
-                { id: 3, name: "Multivitamin Gummies (60 Pcs)", price: 450, category: "Vitamins" },
-                { id: 4, name: "Whey Protein Powder (1kg)", price: 1200, category: "Nutrition" },
-                { id: 5, name: "First Aid Safety Kit", price: 350, category: "Essentials" },
-                { id: 6, name: "BP Monitor Machine", price: 1800, category: "Devices" }
-            ];
+    function setLabTestType(value) {
+      state.lab.testType = value;
+      render();
+    }
 
-            let cart = [];
+    function setLabDistance(value) {
+      state.lab.distance = Number(value);
+      render();
+    }
 
-            // 2. Render Products
-            const productGrid = document.getElementById('product-grid');
-            products.forEach(product => {
-                const card = document.createElement('div');
-                card.className = "bg-white border border-slate-200 rounded-2xl p-5 hover:shadow-lg transition-shadow flex flex-col justify-between";
-                card.innerHTML = `
-                    <div>
-                        <span class="text-xs font-bold text-brand-600 bg-brand-50 px-2 py-1 rounded mb-3 inline-block">${product.category}</span>
-                        <h4 class="font-bold text-slate-800 text-lg leading-tight mb-1">${product.name}</h4>
-                        <div class="text-xl font-extrabold text-slate-800 mb-4">₹${product.price}</div>
-                    </div>
-                    <button onclick="addToCart(${product.id})" class="w-full bg-slate-100 hover:bg-brand-600 text-slate-700 hover:text-white py-2 rounded-lg font-bold transition-colors border border-slate-300">
-                        Add to Cart
-                    </button>
-                `;
-                productGrid.appendChild(card);
-            });
+    function submitLabForm(e) {
+      e.preventDefault();
+      state.lab.submitted = true;
+      showToast("Sample collection request received!");
+      render();
+    }
 
-            // 3. Cart Logic
-            window.addToCart = function(productId) {
-                const product = products.find(p => p.id === productId);
-                const existingItem = cart.find(item => item.id === productId);
-                
-                if (existingItem) {
-                    existingItem.qty += 1;
-                } else {
-                    cart.push({ ...product, qty: 1 });
-                }
-                
-                showToast(`Added ${product.name} to cart`);
-                updateCartUI();
-            };
+    function resetLabForm() {
+      state.lab.submitted = false;
+      render();
+    }
 
-            window.changeQty = function(productId, change) {
-                const item = cart.find(i => i.id === productId);
-                if (!item) return;
-                
-                item.qty += change;
-                if (item.qty <= 0) {
-                    cart = cart.filter(i => i.id !== productId);
-                }
-                updateCartUI();
-            };
+    function selectDoctor(id) {
+      state.doctors.selectedDoc = DOCTORS.find(doc => doc.id === id) || null;
+      render();
+    }
 
-            // 4. Update UI & Calculate Rules
-            const cartContainer = document.getElementById('cart-items-container');
-            const emptyMsg = document.getElementById('empty-cart-msg');
-            const calcDistance = document.getElementById('calc-distance');
-            const calcStatus = document.getElementById('calc-status');
-            const btnPharmacy = document.getElementById('btn-pharmacy-submit');
-            
-            function updateCartUI() {
-                // Render Cart Items
-                cartContainer.innerHTML = '';
-                let subtotal = 0;
-                let totalItems = 0;
+    function closeDoctorModal() {
+      state.doctors.selectedDoc = null;
+      render();
+    }
 
-                if (cart.length === 0) {
-                    cartContainer.appendChild(emptyMsg);
-                } else {
-                    cart.forEach(item => {
-                        subtotal += item.price * item.qty;
-                        totalItems += item.qty;
-                        
-                        const el = document.createElement('div');
-                        el.className = "flex justify-between items-center bg-white p-3 border border-slate-100 rounded-lg shadow-sm";
-                        el.innerHTML = `
-                            <div class="flex-1 pr-2">
-                                <div class="text-sm font-bold text-slate-800 leading-tight">${item.name}</div>
-                                <div class="text-xs text-slate-500 font-medium mt-1">₹${item.price} x ${item.qty} = ₹${item.price * item.qty}</div>
-                            </div>
-                            <div class="flex items-center gap-2 bg-slate-100 rounded-md p-1">
-                                <button onclick="changeQty(${item.id}, -1)" class="w-6 h-6 flex justify-center items-center rounded bg-white text-slate-600 hover:text-red-500 shadow-sm"><i class="fas fa-minus text-xs"></i></button>
-                                <span class="text-sm font-bold w-4 text-center">${item.qty}</span>
-                                <button onclick="changeQty(${item.id}, 1)" class="w-6 h-6 flex justify-center items-center rounded bg-white text-slate-600 hover:text-brand-600 shadow-sm"><i class="fas fa-plus text-xs"></i></button>
-                            </div>
-                        `;
-                        cartContainer.appendChild(el);
-                    });
-                }
+    function bookDoctor(e) {
+      e.preventDefault();
+      if (state.doctors.selectedDoc) {
+        showToast(`Appointment booked with ${state.doctors.selectedDoc.name}!`);
+      }
+      state.doctors.selectedDoc = null;
+      render();
+    }
 
-                document.getElementById('cart-count-badge').textContent = `${totalItems} Items`;
-                document.getElementById('sum-sub').textContent = subtotal.toFixed(2);
-                
-                evaluatePharmacyRules(subtotal);
-            }
+    function setCartDistance(value) {
+      state.cartUI.distance = Number(value);
+      render();
+    }
 
-            // 5. Apply Rules Engine (₹999 limit, Discount, Distance Fees)
-            function evaluatePharmacyRules(subtotal) {
-                const distanceVal = calcDistance.value;
-                const dist = parseFloat(distanceVal);
+    function handleCheckout() {
+      state.cartUI.isProcessing = true;
+      render();
 
-                // Reset Status
-                calcStatus.className = 'hidden';
-                btnPharmacy.disabled = true;
-                
-                // Reset Summary visually if no cart
-                if (subtotal === 0) {
-                    document.getElementById('sum-disc').textContent = "0.00";
-                    document.getElementById('sum-del').textContent = "0.00";
-                    document.getElementById('sum-total').textContent = "0.00";
-                    return;
-                }
+      setTimeout(() => {
+        state.cartUI.isProcessing = false;
+        state.cartUI.orderPlaced = true;
+        state.cart = [];
+        render();
+      }, 1500);
+    }
 
-                // Check Minimum ₹999 Rule
-                if (subtotal < 999) {
-                    calcStatus.innerHTML = `<i class="fas fa-exclamation-triangle mr-2"></i>Cart is ₹${subtotal}. Add <strong>₹${(999 - subtotal).toFixed(0)}</strong> more for home delivery.`;
-                    calcStatus.className = 'p-3 rounded-lg text-sm font-medium border bg-amber-50 text-amber-700 border-amber-200 block';
-                    
-                    document.getElementById('sum-disc').textContent = "0.00";
-                    document.getElementById('sum-del').textContent = "0.00";
-                    document.getElementById('sum-total').textContent = subtotal.toFixed(2);
-                    return;
-                }
-
-                // If no distance entered yet, prompt user
-                if (!distanceVal || isNaN(dist) || dist < 0) {
-                    calcStatus.innerHTML = `<i class="fas fa-info-circle mr-2"></i>Enter your delivery distance to complete the order.`;
-                    calcStatus.className = 'p-3 rounded-lg text-sm font-medium border bg-blue-50 text-blue-700 border-blue-200 block';
-                    
-                    document.getElementById('sum-disc').textContent = (subtotal * 0.15).toFixed(2);
-                    document.getElementById('sum-del').textContent = "0.00";
-                    document.getElementById('sum-total').textContent = (subtotal * 0.85).toFixed(2);
-                    return;
-                }
-
-                // Check Max Distance 30km Rule
-                if (dist > 30) {
-                    calcStatus.innerHTML = `<i class="fas fa-times-circle mr-2"></i>Location (${dist}km) exceeds our <strong>30km</strong> delivery zone.`;
-                    calcStatus.className = 'p-3 rounded-lg text-sm font-medium border bg-red-50 text-red-700 border-red-200 block';
-                    return;
-                }
-
-                // Valid Order Calculations
-                const discount = subtotal * 0.15;
-                let deliveryFee = 0;
-
-                if (dist <= 5) deliveryFee = 0;
-                else if (dist > 5 && dist <= 15) deliveryFee = 49;
-                else if (dist > 15 && dist <= 30) deliveryFee = 69;
-
-                const finalTotal = (subtotal - discount) + deliveryFee;
-
-                // Update Summary DOM
-                document.getElementById('sum-disc').textContent = discount.toFixed(2);
-                document.getElementById('sum-del').textContent = deliveryFee.toFixed(2);
-                document.getElementById('sum-total').textContent = finalTotal.toFixed(2);
-
-                // Show Success Message
-                let deliveryMsg = deliveryFee === 0 ? "Free Delivery applied!" : `₹${deliveryFee} Delivery fee applied.`;
-                calcStatus.innerHTML = `<i class="fas fa-check-circle mr-2"></i>Valid Order. ${deliveryMsg}`;
-                calcStatus.className = 'p-3 rounded-lg text-sm font-medium border bg-green-50 text-green-700 border-green-200 block';
-                
-                // Enable Button!
-                btnPharmacy.disabled = false;
-            }
-
-            // Listen for distance changes
-            calcDistance.addEventListener('input', () => {
-                let currentSub = parseFloat(document.getElementById('sum-sub').textContent);
-                evaluatePharmacyRules(currentSub);
-            });
-
-            // 6. Prescription Upload Visual Feedback
-            const fileInput = document.getElementById('prescription-upload');
-            const uploadText = document.getElementById('upload-text');
-            const uploadIcon = document.getElementById('upload-icon');
-            
-            fileInput.addEventListener('change', function() {
-                if (this.files && this.files.length > 0) {
-                    const fileName = this.files[0].name;
-                    uploadText.innerHTML = `<span class="text-brand-600 font-bold">${fileName}</span> attached.`;
-                    uploadIcon.className = "fas fa-file-check text-2xl text-green-500 mb-2";
-                }
-            });
-
-            // 7. Submit Pharmacy Order
-            document.getElementById('pharmacy-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                if (btnPharmacy.disabled) return;
-
-                const btnText = document.getElementById('pharmacy-btn-text');
-                const btnSpinner = document.getElementById('pharmacy-btn-spinner');
-                
-                btnPharmacy.disabled = true;
-                btnText.textContent = 'Processing...';
-                btnSpinner.classList.remove('hidden');
-
-                simulateNetwork(() => {
-                    const total = document.getElementById('sum-total').textContent;
-                    showToast(`Success! Order of ₹${total} placed. Our team will verify and dispatch shortly.`);
-                    
-                    // Full Reset
-                    e.target.reset();
-                    cart = [];
-                    updateCartUI();
-                    uploadText.innerHTML = "Click or drag prescription here";
-                    uploadIcon.className = "fas fa-cloud-upload-alt text-2xl text-brand-500 mb-2";
-                    
-                    btnText.textContent = 'Confirm Order';
-                    btnSpinner.classList.add('hidden');
-                });
-            });
-
-            // --- Diagnostics & Clinic Logic ---
-            const labDistInput = document.getElementById('lab-dist-input');
-            const labDistMsg = document.getElementById('lab-dist-msg');
-            labDistInput.addEventListener('input', (e) => {
-                const dist = parseFloat(e.target.value);
-                if(isNaN(dist) || dist < 0) { labDistMsg.textContent = ''; return; }
-                if(dist <= 5) { labDistMsg.innerHTML = '<i class="fas fa-check text-green-500"></i> Free Collection'; labDistMsg.className = 'text-xs font-bold text-green-600'; } 
-                else { labDistMsg.innerHTML = 'Travel charges apply'; labDistMsg.className = 'text-xs font-bold text-amber-600'; }
-            });
-
-            document.getElementById('lab-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const btnSubmit = document.getElementById('btn-lab-submit');
-                btnSubmit.disabled = true;
-                document.getElementById('lab-btn-text').textContent = 'Scheduling...';
-                document.getElementById('lab-btn-spinner').classList.remove('hidden');
-                simulateNetwork(() => {
-                    showToast('Sample collection scheduled! Our team will contact you shortly.');
-                    e.target.reset();
-                    labDistMsg.textContent = '';
-                    btnSubmit.disabled = false;
-                    document.getElementById('lab-btn-text').textContent = 'Schedule Collection';
-                    document.getElementById('lab-btn-spinner').classList.add('hidden');
-                });
-            });
-
-            const docSelect = document.getElementById('doctor-select');
-            document.querySelectorAll('.doctor-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    docSelect.value = this.getAttribute('data-doctor');
-                    docSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    docSelect.classList.add('ring-4', 'ring-brand-500/50', 'border-brand-500');
-                    setTimeout(() => docSelect.classList.remove('ring-4', 'ring-brand-500/50', 'border-brand-500'), 800);
-                });
-            });
-
-            document.getElementById('appointment-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const btnSubmit = document.getElementById('btn-appt-submit');
-                btnSubmit.disabled = true;
-                document.getElementById('appt-btn-text').textContent = 'Booking...';
-                document.getElementById('appt-btn-spinner').classList.remove('hidden');
-                simulateNetwork(() => {
-                    const doc = docSelect.value.split('-')[0].trim();
-                    showToast(`Appointment confirmed with ${doc}.`);
-                    e.target.reset();
-                    btnSubmit.disabled = false;
-                    document.getElementById('appt-btn-text').textContent = 'Confirm Appointment';
-                    document.getElementById('appt-btn-spinner').classList.add('hidden');
-                });
-            });
-        });
-    </script>
+    render();
+  </script>
 </body>
 </html>
